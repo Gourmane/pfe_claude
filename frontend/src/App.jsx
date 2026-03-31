@@ -1,7 +1,8 @@
-import React from "react";
+import { RouterProvider } from 'react-router-dom'
+import router from './router'
 
 function App() {
-  return <h1>App Reset - Clean State</h1>;
+  return <RouterProvider router={router} />
 }
 
-export default App;
+export default App
