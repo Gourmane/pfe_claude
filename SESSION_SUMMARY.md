@@ -4,257 +4,302 @@ _Last updated: 2026-03-31_
 
 ---
 
-## Project Overview
+## 1. Project Overview
 
 **Name:** AI IT Assistant Platform
 **Type:** PFE MVP — AI-powered IT Support Ticket Management System
+
+**What it does:** A web application for managing IT support tickets. Admin users create clients, open tickets, assign technicians, and oversee operations. Technicians handle assigned tickets, update status, and add comments. An AI integration (Groq) provides ticket summarization and category suggestions.
+
+**Target users:**
+- `admin` — manages clients, creates/assigns tickets, views all data
+- `technicien` — handles assigned tickets only, updates status, adds comments
+
 **Stack:**
-- Backend: Laravel 12 + Sanctum + Groq AI (port 8000)
+- Backend: Laravel 12 + Sanctum + Groq AI (port 8000) — **fully built and tested**
 - Frontend: React 19 + Vite 8 + Tailwind CSS 4 + React Router v7 + Axios (port 5173)
-- DB: MySQL
+- Database: MySQL
 
 ---
 
-## What Was Accomplished This Session
+## 2. Current Implementation Status
 
-### 1. Backend — Fully audited and fixed
+**Backend:** Complete. All 24 API endpoints working. Tests passing.
 
-All backend issues from the PRD audit have been resolved. The backend is considered **done**.
-
-**Fixes applied:**
-| Fix | File |
-|-----|------|
-| CORS configured for localhost:5173 | `backend/config/cors.php` |
-| Sanctum: added localhost:5173, token expiry 24h | `backend/config/sanctum.php` |
-| Removed test endpoints that leaked role info | `TestRoleController.php` deleted |
-| Added `GET /api/technicians` (admin-only, for dropdown) | `TechnicianController.php` created |
-| Added ticket filtering: status, priority, client_id, search | `TicketController.php` |
-| Changed ticket update from PUT → PATCH | `routes/api.php` |
-| Added technician dashboard `GET /api/technician/dashboard` | `DashboardController.php` |
-| Admin can comment on any ticket (not technicien-only) | `TicketCommentController.php` |
-| Standardized all JSON responses to `{ message, data }` | All controllers |
-| Rate-limited AI endpoint (10 req/min) | `routes/api.php` |
-
-**Verified:** `php artisan route:list` shows 24 routes. `php artisan test` passes.
-
-**Backend response format (must know for frontend):**
-```json
-// Standard
-{ "message": "...", "data": { ... } }
-
-// Login only (token is flat sibling)
-{ "message": "...", "token": "...", "data": { user object } }
-
-// Paginated lists
-{ "message": "...", "data": { "data": [...], "meta": { ... } } }
-
-// AI summary (source is flat sibling)
-{ "message": "...", "data": { ... }, "source": "groq|keyword" }
-```
-
----
-
-### 2. Frontend — Phase 1 partially complete
-
-**What exists in `frontend/src/` right now:**
-```
-src/
-├── api/
-│   └── axios.js         ✅ DONE — Axios instance with interceptors
-├── App.jsx              ✅ DONE — Simple Tailwind heading (boilerplate replaced)
-├── index.css            ✅ DONE — @import "tailwindcss" only
-├── main.jsx             (unchanged, wraps App)
-├── assets/              (still has default Vite assets — can be deleted)
-├── components/          ✅ folder created (empty)
-├── context/             ✅ folder created (empty)
-├── hooks/               ✅ folder created (empty)
-├── layouts/             ✅ folder created (empty)
-├── pages/               ✅ folder created (empty)
-└── router/              ✅ folder created (empty)
-```
-
-**`frontend/.env` exists:**
-```
-VITE_API_URL=http://localhost:8000/api
-```
-
-**`frontend/src/api/axios.js` — final correct implementation:**
-```js
-import axios from 'axios'
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-})
-
-// Request: attach Bearer token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers = config.headers ?? {}
-      config.headers.Authorization = `Bearer ${token}`
-    }
-    return config
-  },
-  (error) => Promise.reject(error),
-)
-
-// Response: 401 cleanup only — NO redirect
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      Object.keys(localStorage)
-        .filter((key) => /auth/i.test(key))
-        .forEach((key) => localStorage.removeItem(key))
-    }
-    return Promise.reject(error)
-  },
-)
-
-export default api
-```
-
-**What Phase 1 still needs (before moving to Phase 2):**
-- `src/assets/` contents deleted and `App.css` deleted
-- The domain API service files do NOT exist yet:
-  - `src/api/auth.js`
-  - `src/api/clients.js`
-  - `src/api/tickets.js`
-  - `src/api/dashboard.js`
-
-These are Phase 2's first task (per the plan).
-
----
-
-### 3. FRONT_PLAN.md — Finalized
-
-Location: `frontend/FRONT_PLAN.md`
-
-The plan was created and then updated with **10 review corrections**. It is now finalized.
-
-**Key rules locked in the plan (must not be changed during implementation):**
-
-| Rule | Detail |
-|------|--------|
-| 401 handling | Axios interceptor clears token + user + any persisted auth data. NO redirect. Routing stays in React. |
-| API services | Per-domain files: `api/auth.js`, `api/clients.js`, `api/tickets.js`, `api/dashboard.js` |
-| Auth loading | `ProtectedRoute` and `RoleRoute` must wait for `loading === false` before routing. Show spinner while loading. |
-| Error normalization | Use `normalizeError(err)` — extracts message from any API error shape (422, generic, fallback) |
-| Logout cleanup | Always clear token + user from localStorage AND state. Same cleanup on failed `GET /me`. |
-| Filter URL sync | Ticket filters synced with `useSearchParams` (survives refresh) |
-| Page state pattern | Always: loading → error → empty → content (in that order) |
-| Async action pattern | set loading → clear error → try/catch normalizeError → finally stop loading |
-| Refetch strategy | After create/update/delete: refetch from API. No optimistic updates. |
-| Testing edge cases | Test: empty data, 422 errors, expired token (401), long text, rapid clicks, pagination |
-
----
-
-## Implementation Phases — Status
+**Frontend:** Phases 1-8 complete and committed. Phase 9 is next.
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Clean Vite Boilerplate + Axios | 🟡 Partial (axios.js + folders done; domain api files missing, assets not cleaned) |
-| 2 | Auth Context + Login Page | ⬜ Not started |
-| 3 | Router + Route Guards + Layouts | ⬜ Not started |
-| 4 | Shared UI Components | ⬜ Not started |
-| 5 | Admin Dashboard | ⬜ Not started |
-| 6 | Client Management (CRUD) | ⬜ Not started |
-| 7 | Ticket List + Filters | ⬜ Not started |
-| 8 | Ticket Creation | ⬜ Not started |
-| 9 | Ticket Detail + Status + Comments + AI | ⬜ Not started |
-| 10 | Technician Dashboard | ⬜ Not started |
-| 11 | Polish, QA, Demo Readiness | ⬜ Not started |
+| 1 | Foundation (Tailwind, Axios, folders, .env) | Done |
+| 2 | Auth System (AuthContext, LoginPage) | Done |
+| 3 | Routing + Layouts + Guards | Done |
+| 4 | Shared UI Components (8 components) | Done |
+| 5 | Admin Dashboard (stats + recent tickets) | Done |
+| 6 | Client Management (full CRUD) | Done |
+| 7 | Ticket List + Filters (admin + technician) | Done |
+| 8 | Ticket Creation (admin form) | Done |
+| 9 | Ticket Detail + Status + Comments + AI | **Not started** |
+| 10 | Technician Dashboard | Not started |
+| 11 | Polish, QA, Demo Readiness | Not started |
+
+**Git state:** 2 commits. Latest: `3c26f4c frontend pahse 8 done redy to phase 9`. Clean working tree.
 
 ---
 
-## Key Backend API Reference (for frontend implementation)
+## 3. Architecture
+
+### Folder structure
+```
+frontend/src/
+├── api/
+│   ├── axios.js              # Configured Axios instance (interceptors)
+│   ├── auth.js               # login(), logout(), getMe()
+│   ├── clients.js            # getClients(), getClient(), createClient(), updateClient(), deleteClient()
+│   ├── dashboard.js          # getAdminDashboard()
+│   └── tickets.js            # getTickets(), createTicket()
+├── context/
+│   └── AuthContext.jsx        # AuthProvider (user, token, login, logout, loading)
+├── hooks/
+│   └── useAuth.js             # Hook to consume AuthContext
+├── layouts/
+│   ├── AuthLayout.jsx         # Centered layout for login
+│   ├── AdminLayout.jsx        # Sidebar + header for admin
+│   └── TechnicianLayout.jsx   # Sidebar + header for technician
+├── pages/
+│   ├── LoginPage.jsx
+│   ├── NotFoundPage.jsx
+│   ├── admin/
+│   │   ├── DashboardPage.jsx      # Stats cards + recent tickets table
+│   │   ├── ClientsPage.jsx        # Search + paginated table + delete modal
+│   │   ├── ClientCreatePage.jsx   # Form → POST /clients
+│   │   ├── ClientEditPage.jsx     # Form → PUT /clients/{id}
+│   │   ├── TicketsPage.jsx        # Filters + paginated table + URL sync
+│   │   ├── TicketCreatePage.jsx   # Form → POST /tickets
+│   │   └── TicketDetailPage.jsx   # PLACEHOLDER (Phase 9)
+│   └── technician/
+│       ├── DashboardPage.jsx      # PLACEHOLDER (Phase 10)
+│       ├── TicketsPage.jsx        # Filters + paginated table + URL sync
+│       └── TicketDetailPage.jsx   # PLACEHOLDER (Phase 9)
+├── components/
+│   ├── ui/                        # 8 shared primitives
+│   │   ├── Alert.jsx              # success/error/info with optional close
+│   │   ├── Badge.jsx              # Status + priority color mapping
+│   │   ├── Button.jsx             # primary/secondary/danger + loading
+│   │   ├── EmptyState.jsx         # Message + optional action
+│   │   ├── Input.jsx              # Label + error + aria
+│   │   ├── Modal.jsx              # Overlay + backdrop close
+│   │   ├── Pagination.jsx         # Page numbers + prev/next
+│   │   └── Spinner.jsx            # Centered animated spinner
+│   ├── clients/
+│   │   └── ClientForm.jsx         # Shared create/edit form
+│   └── tickets/
+│       ├── TicketFilters.jsx      # Status/priority/client/search dropdowns
+│       └── TicketForm.jsx         # Title/desc/priority/client form
+├── router/
+│   ├── index.jsx              # All route definitions (lazy loaded)
+│   ├── ProtectedRoute.jsx     # Auth guard (waits for loading)
+│   └── RoleRoute.jsx          # Role guard (redirects wrong role)
+├── utils/
+│   ├── ticketHelpers.js       # formatDate(), formatLabel(), parsePage()
+│   └── formHelpers.js         # mapValidationErrors()
+├── App.jsx                    # RouterProvider
+├── main.jsx                   # StrictMode + AuthProvider
+└── index.css                  # @import "tailwindcss"
+```
+
+### Key design decisions
+- **Per-domain API files** — each file wraps axios calls, unwraps response
+- **AuthContext is the only global state** — everything else is local useState
+- **Route guards wait for auth loading** — prevents login flash on refresh
+- **401 cleanup in interceptor, routing in React** — strict separation
+- **Lazy loading** on all page components with Suspense fallbacks
+- **useSearchParams** for ticket filter URL sync (survives refresh)
+- **Shared UI components** reused across all pages — no one-off styles
+
+---
+
+## 4. Features Implemented
+
+### Authentication (Phase 2)
+- Login with email/password → token stored in localStorage
+- Session restoration via `GET /me` on page load
+- Logout with full cleanup (token + user + auth keys)
+- Loading spinner during auth restoration
+
+### Routing + Role Guards (Phase 3)
+- `/login` → centered login form inside AuthLayout
+- `/admin/*` → ProtectedRoute → RoleRoute(admin) → AdminLayout
+- `/technician/*` → ProtectedRoute → RoleRoute(technicien) → TechnicianLayout
+- `/` → redirects to `/login`
+- `*` → 404 page
+- Wrong role → redirected to own dashboard
+
+### Admin Dashboard (Phase 5)
+- 4 stat cards: total clients, total tickets, pending, resolved
+- Recent tickets table with status/priority badges
+- Data from `GET /dashboard`
+
+### Client Management (Phase 6)
+- Paginated client list with search
+- Create, edit, delete with confirmation modal
+- 422 validation errors shown per field
+- Delete protection (API rejects if client has tickets)
+
+### Ticket List + Filters (Phase 7)
+- Admin: filter by status, priority, client, search text
+- Technician: filter by status, priority, search (no client filter, no create button)
+- Filters synced with URL via `useSearchParams`
+- Search debounced at 300ms
+- Clickable rows navigate to detail page
+- Pagination connected to API response
+
+### Ticket Creation (Phase 8)
+- Form: title, description, priority dropdown, searchable client dropdown
+- Client search debounced, fetches `GET /clients?search=`
+- Submit → `POST /tickets` → redirect to list
+- 422 field-level validation errors
+- Does not send `status` or `created_by` (backend sets these)
+
+---
+
+## 5. UI / UX State
+
+**Design system:** Defined in `frontend/docs/DESIGN_SYSTEM.md`. Consistently applied.
+
+**Visual identity:**
+- Light mode SaaS interface
+- App background: `#f5f7fb`
+- Cards: white, `rounded-2xl`, `border-[#e5e7eb]`, soft shadow
+- Primary brand: `#2563eb` (blue)
+- Text: `#111827` primary, `#6b7280` secondary, `#9ca3af` muted
+- Tables: soft row separators, hover state, uppercase small headers
+- Badges: soft tinted backgrounds per status/priority
+
+**Consistency level:** High. All pages follow the same page header pattern (role label + title + description), the same card styling, the same table pattern, the same form layout (labels above inputs, submit right, cancel left). Hardcoded hex values from DESIGN_SYSTEM.md used throughout page-level code.
+
+**Current assessment:** Professional SaaS quality. Not generic AI-generated. Clean and spacious.
+
+---
+
+## 6. Code Quality
+
+**Structure:** Clean. Clear separation between api, context, hooks, layouts, pages, components, router, utils.
+
+**Readability:** High. Functional components, destructured props, consistent naming (PascalCase components, camelCase functions, Page suffix on pages).
+
+**Reusability:** Good. 8 shared UI primitives reused across all pages. Domain components (ClientForm, TicketForm, TicketFilters) properly extracted.
+
+**Patterns consistently applied:**
+- Page state: loading → error → empty → content
+- Async actions: set loading → clear error → try/catch → finally stop loading
+- isMounted cleanup in all useEffect async calls
+- Error handling: `error.response?.data?.message || fallback`
+- 403 handled with French message
+- Refetch after mutations (no optimistic updates)
+
+**Minor debt:**
+- Phase 3 spinners (RouteSpinner, GuardSpinner) still inline — not using Spinner component
+- Phase 4 UI components use some Tailwind named classes while pages use hardcoded hex — minor color methodology split but visually matching
+
+---
+
+## 7. Issues / Risks
+
+**No critical issues.**
+
+Minor observations:
+- `TicketDetailPage.jsx` (admin + technician) are placeholders — Phase 9 will replace them
+- `technician/DashboardPage.jsx` is a placeholder — Phase 10 will replace it
+- `api/dashboard.js` only has `getAdminDashboard()` — technician dashboard function will be added in Phase 10
+- `api/tickets.js` only has `getTickets()` and `createTicket()` — Phase 9 will add `getTicket()`, `updateTicket()`, `assignTicket()`, `transitionStatus()`, `getComments()`, `addComment()`, `generateAiSummary()`
+- No `GET /technicians` API function yet — needed in Phase 9 for assignment dropdown
+
+---
+
+## 8. Next Steps
+
+### Phase 9: Ticket Detail + Status + Comments + AI (next to implement)
+
+This is the most complex phase and the centerpiece of the MVP. It must build:
+
+**Files to create/replace:**
+- `src/pages/admin/TicketDetailPage.jsx` — full implementation
+- `src/pages/technician/TicketDetailPage.jsx` — full implementation
+- `src/components/tickets/StatusTransitionButton.jsx`
+- `src/components/tickets/CommentSection.jsx`
+- `src/components/tickets/AssignTechnicianSection.jsx`
+- `src/components/ai/AiSummaryCard.jsx`
+- `src/components/ai/GenerateSummaryButton.jsx`
+
+**API functions to add to `api/tickets.js`:**
+- `getTicket(id)`
+- `updateTicket(id, data)`
+- `assignTicket(id, technicianId)`
+- `transitionStatus(id, status)`
+- `getComments(id)`
+- `addComment(id, content)`
+- `generateAiSummary(id)`
+
+**New API file needed:**
+- Add `getTechnicians()` to `api/tickets.js` or create dedicated file (for assignment dropdown)
+
+**Backend endpoints consumed:**
+- `GET /tickets/{id}`
+- `PATCH /tickets/{id}`
+- `POST /tickets/{id}/assign`
+- `POST /tickets/{id}/status`
+- `GET /tickets/{id}/comments`
+- `POST /tickets/{id}/comments`
+- `POST /tickets/{id}/ai-summary`
+- `GET /technicians`
+
+### After Phase 9
+- Phase 10: Technician Dashboard (stat cards + assigned tickets)
+- Phase 11: Polish, QA, demo readiness
+
+---
+
+## Key Backend API Reference
 
 | Method | Endpoint | Auth | Role | Purpose |
 |--------|----------|------|------|---------|
-| POST | `/api/login` | No | — | Login, returns token |
-| POST | `/api/logout` | Yes | Any | Logout, revoke token |
-| GET | `/api/me` | Yes | Any | Get current user |
-| GET | `/api/dashboard` | Yes | admin | Admin dashboard stats |
-| GET | `/api/technician/dashboard` | Yes | technicien | Tech personal stats |
-| GET | `/api/technicians` | Yes | admin | List technicians (for dropdown) |
-| GET/POST | `/api/clients` | Yes | admin | List / create clients |
-| GET/PATCH/DELETE | `/api/clients/{id}` | Yes | admin | Read / update / delete client |
-| GET/POST | `/api/tickets` | Yes | any | List (filtered) / create ticket |
-| GET/PATCH | `/api/tickets/{id}` | Yes | any | Read / update ticket |
-| POST | `/api/tickets/{id}/assign` | Yes | admin | Assign ticket to technician |
-| POST | `/api/tickets/{id}/status` | Yes | any | Transition ticket status |
+| POST | `/api/login` | No | -- | Login |
+| POST | `/api/logout` | Yes | Any | Logout |
+| GET | `/api/me` | Yes | Any | Current user |
+| GET | `/api/dashboard` | Yes | admin | Admin stats |
+| GET | `/api/technician/dashboard` | Yes | technicien | Tech stats |
+| GET | `/api/technicians` | Yes | admin | Technician list |
+| GET/POST | `/api/clients` | Yes | admin | List / create |
+| GET/PATCH/DELETE | `/api/clients/{id}` | Yes | admin | Read / update / delete |
+| GET/POST | `/api/tickets` | Yes | any | List / create |
+| GET/PATCH | `/api/tickets/{id}` | Yes | any | Read / update |
+| POST | `/api/tickets/{id}/assign` | Yes | admin | Assign technician |
+| POST | `/api/tickets/{id}/status` | Yes | any | Status transition |
 | GET/POST | `/api/tickets/{id}/comments` | Yes | any | List / add comment |
-| POST | `/api/tickets/{id}/ai-summary` | Yes | any | Generate AI summary |
+| POST | `/api/tickets/{id}/ai-summary` | Yes | any | AI summary |
 
-**Ticket categories (use exact values with accents):** `PC`, `Imprimante`, `Réseau`, `Caméra`, `Autre`
+**Status flow:** `pending` -> `in_progress` -> `resolved` -> `closed`
 
-**Ticket status flow:** `pending` → `in_progress` → `resolved` → `closed`
+**Categories:** `PC`, `Imprimante`, `Reseau`, `Camera`, `Autre`
 
 **Roles:** `admin`, `technicien`
 
 ---
 
-## Business Rules (critical for frontend)
+## How to Start
 
-- Admin creates clients and tickets. No client self-registration.
-- Technicien can only see/act on assigned tickets.
-- Admin can comment on any ticket. Technicien only on assigned tickets.
-- `technician_id` is nullable — unassigned tickets are valid.
-- A client with tickets cannot be deleted.
-- AI summary uses Groq API with keyword fallback (may be slow — show loading state).
-
----
-
-## Important Conventions
-
-### Auth storage
-- Token stored in `localStorage` as `"token"`
-- User stored in `localStorage` as `"user"` (JSON)
-- On 401 or logout: clear both + any `/auth/i` matching keys
-
-### Axios instance
-- Always import from `src/api/axios.js` (the configured instance), never from `axios` directly
-
-### Routing decisions
-- NEVER navigate/redirect inside `axios.js` interceptor
-- Auth state is managed in `AuthContext`
-- Route guards (`ProtectedRoute`, `RoleRoute`) handle all redirects after reading auth state
-
----
-
-## Files to Know
-
-| File | Purpose |
-|------|---------|
-| `backend/PRD.md` | Product Requirements — source of truth |
-| `CLAUDE.md` | Project rules for Claude (roles, rules, conventions) |
-| `frontend/FRONT_PLAN.md` | Complete phased frontend implementation plan |
-| `frontend/src/api/axios.js` | Axios instance (done) |
-| `frontend/.env` | `VITE_API_URL=http://localhost:8000/api` |
-
----
-
-## How to Start the Next Session
-
-1. **Backend** — run from `backend/`:
+1. **Backend** from `backend/`:
    ```bash
    php artisan serve
    ```
 
-2. **Frontend** — run from `frontend/`:
+2. **Frontend** from `frontend/`:
    ```bash
    npm run dev
    ```
 
-3. **Pick up at Phase 1 completion**, then move to Phase 2.
-
-   Phase 1 remaining tasks:
-   - Delete `src/assets/` contents and `src/App.css`
-   - Create `src/api/auth.js`, `src/api/clients.js`, `src/api/tickets.js`, `src/api/dashboard.js`
-
-   Then Phase 2: AuthContext + useAuth hook + LoginPage.
-
-4. **Use `frontend/FRONT_PLAN.md`** as the execution guide — send only the relevant phase section to Codex per session.
+3. **Reference docs:**
+   - `frontend/docs/FRONT_PLAN.md` — phase-by-phase implementation plan
+   - `frontend/docs/DESIGN_SYSTEM.md` — visual styling rules
+   - `backend/PRD.md` — product requirements
+   - `CLAUDE.md` — project conventions for AI assistants
