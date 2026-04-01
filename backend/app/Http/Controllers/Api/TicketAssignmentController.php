@@ -13,7 +13,7 @@ class TicketAssignmentController extends Controller
     {
         if ($ticket->status === 'closed') {
             return response()->json([
-                'message' => 'Impossible d’assigner un ticket clôturé.'
+                'message' => 'Impossible d’assigner un ticket clôturé.',
             ], 422);
         }
 
@@ -25,7 +25,7 @@ class TicketAssignmentController extends Controller
 
         if ($technician->role !== 'technicien') {
             return response()->json([
-                'message' => 'L’utilisateur choisi n’est pas un technicien.'
+                'message' => 'L’utilisateur choisi n’est pas un technicien.',
             ], 422);
         }
 

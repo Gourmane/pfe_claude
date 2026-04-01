@@ -23,19 +23,19 @@ class AiSummaryController extends Controller
 
         if (! in_array($user->role, ['admin', 'technicien'], true)) {
             return response()->json([
-                'message' => 'Acces interdit.',
+                'message' => 'Accès interdit.',
             ], 403);
         }
 
         if ($user->role === 'technicien' && $ticket->technician_id !== $user->id) {
             return response()->json([
-                'message' => 'Acces interdit a ce ticket.',
+                'message' => 'Accès interdit à ce ticket.',
             ], 403);
         }
 
         if (blank($ticket->description)) {
             return response()->json([
-                'message' => 'Impossible de generer un resume sans description.',
+                'message' => 'Impossible de générer un résumé sans description.',
             ], 422);
         }
 
@@ -50,7 +50,7 @@ class AiSummaryController extends Controller
         );
 
         return response()->json([
-            'message' => 'Resume genere avec succes.',
+            'message' => 'Résumé généré avec succès.',
             'source' => $generated['source'],
             'data' => $summary,
         ]);
@@ -98,7 +98,7 @@ class AiSummaryController extends Controller
         $summaryText = $cleanDescription !== '' ? $cleanDescription : 'Aucune description fournie.';
 
         return [
-            'summary' => Str::limit('Resume automatique: '.$summaryText, 280),
+            'summary' => Str::limit('Résumé automatique : '.$summaryText, 280),
             'suggested_category' => $category,
             'source' => 'fallback',
         ];

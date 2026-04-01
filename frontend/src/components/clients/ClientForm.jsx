@@ -47,14 +47,17 @@ function ClientForm({
 
   function handleSubmit(event) {
     event.preventDefault()
+
+    if (loading) {
+      return
+    }
+
     onSubmit(formValues)
   }
 
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
-      {error ? (
-        <Alert message={error} type="error" />
-      ) : null}
+      {error ? <Alert message={error} type="error" /> : null}
 
       <div className="grid gap-5 md:grid-cols-2">
         <Input
@@ -67,7 +70,7 @@ function ClientForm({
         />
         <Input
           error={fieldErrors.telephone}
-          label="Telephone"
+          label="Téléphone"
           name="telephone"
           onChange={handleChange}
           required
@@ -75,7 +78,7 @@ function ClientForm({
         />
         <Input
           error={fieldErrors.email}
-          label="Email"
+          label="E-mail"
           name="email"
           onChange={handleChange}
           type="email"
@@ -102,7 +105,7 @@ function ClientForm({
 
       <div className="flex flex-col-reverse gap-3 border-t border-[#e5e7eb] pt-6 sm:flex-row sm:justify-between">
         <Button onClick={onCancel} type="button" variant="secondary">
-          Cancel
+          Annuler
         </Button>
         <Button loading={loading} type="submit">
           {submitLabel}

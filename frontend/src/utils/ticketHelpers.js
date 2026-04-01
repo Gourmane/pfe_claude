@@ -1,3 +1,14 @@
+const DISPLAY_LABELS = {
+  closed: 'Clôturé',
+  high: 'Haute',
+  in_progress: 'En cours',
+  low: 'Faible',
+  medium: 'Moyenne',
+  pending: 'En attente',
+  resolved: 'Résolu',
+  urgent: 'Urgente',
+}
+
 export function parsePage(value) {
   const parsedValue = Number(value)
 
@@ -29,6 +40,10 @@ export function formatDate(value) {
 export function formatLabel(value) {
   if (!value) {
     return '--'
+  }
+
+  if (DISPLAY_LABELS[value]) {
+    return DISPLAY_LABELS[value]
   }
 
   return value

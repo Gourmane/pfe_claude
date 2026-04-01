@@ -42,20 +42,21 @@ function ClientCreatePage() {
       <div>
         <p className="text-sm font-medium text-[#2563eb]">Admin</p>
         <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-          Create client
+          Nouveau client
         </h1>
         <p className="mt-2 text-sm text-[#6b7280]">
-          Add a new client profile before creating tickets and assignments.
+          Ajoutez une fiche client avant de créer des tickets et des
+          affectations.
         </p>
       </div>
 
       <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-[#111827]">
-            Client details
+            Informations du client
           </h2>
           <p className="mt-1 text-sm text-[#6b7280]">
-            Fill in the required contact details for this client.
+            Renseignez les coordonnées essentielles pour ce client.
           </p>
         </div>
 
@@ -66,7 +67,7 @@ function ClientCreatePage() {
           loading={loading}
           onCancel={handleCancel}
           onSubmit={handleSubmit}
-          submitLabel="Create client"
+          submitLabel="Créer le client"
         />
       </section>
     </section>

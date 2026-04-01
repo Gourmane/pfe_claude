@@ -22,14 +22,14 @@ class TicketStatusController extends Controller
 
         if ($currentStatus === $nextStatus) {
             return response()->json([
-                'message' => 'Le ticket a deja ce statut.',
+                'message' => 'Le ticket a déjà ce statut.',
                 'data' => $ticket->load(['client', 'technician', 'creator']),
             ]);
         }
 
         if ($currentStatus === 'closed') {
             return response()->json([
-                'message' => 'Un ticket cloture ne peut plus changer de statut.',
+                'message' => 'Un ticket clôturé ne peut plus changer de statut.',
             ], 422);
         }
 
@@ -48,20 +48,20 @@ class TicketStatusController extends Controller
         if (in_array($nextStatus, ['in_progress', 'resolved'], true)) {
             if ($user->role !== 'technicien') {
                 return response()->json([
-                    'message' => 'Seul le technicien assigne peut faire cette transition.',
+                    'message' => 'Seul le technicien assigné peut faire cette transition.',
                 ], 403);
             }
 
             if ($ticket->technician_id !== $user->id) {
                 return response()->json([
-                    'message' => 'Ce ticket n est pas assigne a ce technicien.',
+                    'message' => 'Ce ticket n\'est pas assigné à ce technicien.',
                 ], 403);
             }
         }
 
         if ($nextStatus === 'closed' && $user->role !== 'admin') {
             return response()->json([
-                'message' => 'Seul un admin peut cloturer un ticket.',
+                'message' => 'Seul un admin peut clôturer un ticket.',
             ], 403);
         }
 
@@ -78,7 +78,7 @@ class TicketStatusController extends Controller
         $ticket->update($attributes);
 
         return response()->json([
-            'message' => 'Statut du ticket mis a jour avec succes.',
+            'message' => 'Statut du ticket mis à jour avec succès.',
             'data' => $ticket->load(['client', 'technician', 'creator']),
         ]);
     }

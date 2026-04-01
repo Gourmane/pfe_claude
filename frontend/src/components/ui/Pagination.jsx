@@ -15,7 +15,7 @@ function Pagination({ meta, onPageChange }) {
       className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
     >
       <p className="text-sm text-[#6b7280]">
-        Page <span className="font-medium text-[#111827]">{currentPage}</span> of{' '}
+        Page <span className="font-medium text-[#111827]">{currentPage}</span> sur{' '}
         <span className="font-medium text-[#111827]">{lastPage}</span>
       </p>
 
@@ -26,7 +26,7 @@ function Pagination({ meta, onPageChange }) {
           size="sm"
           variant="secondary"
         >
-          Previous
+          Précédent
         </Button>
 
         {pageNumbers.map((pageNumber) => (
@@ -51,7 +51,7 @@ function Pagination({ meta, onPageChange }) {
           size="sm"
           variant="secondary"
         >
-          Next
+          Suivant
         </Button>
       </div>
     </nav>

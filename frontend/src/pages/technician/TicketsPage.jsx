@@ -58,7 +58,7 @@ function TicketsPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource")
+          setError("Vous n'avez pas accès à cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -146,10 +146,10 @@ function TicketsPage() {
   return (
     <section className="space-y-6">
       <div>
-        <p className="text-sm font-medium text-[#2563eb]">Technician</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#111827]">My Tickets</h1>
+        <p className="text-sm font-medium text-[#2563eb]">Technicien</p>
+        <h1 className="mt-1 text-2xl font-bold text-[#111827]">Mes tickets</h1>
         <p className="mt-2 text-sm text-[#6b7280]">
-          Track your assigned tickets and monitor current support priorities.
+          Suivez vos tickets assignés et les priorités en cours.
         </p>
       </div>
 
@@ -177,11 +177,11 @@ function TicketsPage() {
         <Alert message={error} type="error" />
       ) : tickets.length === 0 ? (
         <EmptyState
-          action={hasActiveFilters ? 'Clear filters' : undefined}
+          action={hasActiveFilters ? 'Réinitialiser les filtres' : undefined}
           message={
             hasActiveFilters
-              ? 'No tickets match the current filters.'
-              : 'No assigned tickets are available yet.'
+              ? 'Aucun ticket ne correspond aux filtres actuels.'
+              : 'Aucun ticket assigné n’est disponible pour le moment.'
           }
           onAction={hasActiveFilters ? handleResetFilters : undefined}
         />
@@ -193,19 +193,19 @@ function TicketsPage() {
                 <thead className="bg-[#f8fafc]">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Title
+                      Titre
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
                       Client
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Technician
+                      Technicien
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Status
+                      Statut
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Priority
+                      Priorité
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
                       Date

@@ -48,7 +48,9 @@ function LoginPage() {
       <div className="flex min-h-[240px] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#dbeafe] border-t-[#2563eb]" />
-          <p className="text-sm text-[#6b7280]">Restoring your session...</p>
+          <p className="text-sm text-[#6b7280]">
+            Restauration de votre session...
+          </p>
         </div>
       </div>
     )
@@ -63,18 +65,18 @@ function LoginPage() {
       <div className="space-y-2">
         <p className="text-sm font-medium text-[#2563eb]">AI IT Assistant</p>
         <h1 className="text-3xl font-bold tracking-tight text-[#111827]">
-          Sign in to your workspace
+          Connexion à votre espace
         </h1>
         <p className="text-sm leading-6 text-[#6b7280]">
-          Access the internal support platform to manage tickets, follow
-          operations, and continue your session securely.
+          Accédez à la plateforme interne pour gérer les tickets, suivre les
+          opérations et reprendre votre session en toute sécurité.
         </p>
       </div>
 
       <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <div>
           <label className="text-sm font-medium text-[#111827]" htmlFor="email">
-            Email
+            E-mail
           </label>
           <input
             autoComplete="email"
@@ -82,7 +84,7 @@ function LoginPage() {
             disabled={isSubmitting}
             id="email"
             onChange={(event) => setEmail(event.target.value)}
-            placeholder="you@company.com"
+            placeholder="vous@entreprise.com"
             required
             type="email"
             value={email}
@@ -94,7 +96,7 @@ function LoginPage() {
             className="text-sm font-medium text-[#111827]"
             htmlFor="password"
           >
-            Password
+            Mot de passe
           </label>
           <input
             autoComplete="current-password"
@@ -102,7 +104,7 @@ function LoginPage() {
             disabled={isSubmitting}
             id="password"
             onChange={(event) => setPassword(event.target.value)}
-            placeholder="Enter your password"
+            placeholder="Saisissez votre mot de passe"
             required
             type="password"
             value={password}
@@ -123,7 +125,7 @@ function LoginPage() {
           disabled={isSubmitting}
           type="submit"
         >
-          {isSubmitting ? 'Signing in...' : 'Sign in'}
+          {isSubmitting ? 'Connexion...' : 'Se connecter'}
         </button>
       </form>
     </section>

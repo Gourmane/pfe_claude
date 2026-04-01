@@ -3,8 +3,8 @@ import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', to: '/technician/dashboard' },
-  { label: 'My Tickets', to: '/technician/tickets' },
+  { label: 'Tableau de bord', to: '/technician/dashboard' },
+  { label: 'Mes tickets', to: '/technician/tickets' },
 ]
 
 function TechnicianLayout() {
@@ -33,13 +33,14 @@ function TechnicianLayout() {
         <div className="flex h-full flex-col">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2563eb]">
-              Technician workspace
+              Espace technicien
             </p>
             <h1 className="mt-2 text-lg font-semibold text-[#111827]">
               AI IT Assistant
             </h1>
             <p className="mt-2 text-sm leading-6 text-[#6b7280]">
-              Review assigned work, follow ticket activity, and stay aligned.
+              Suivez vos interventions, l’activité des tickets et les priorités
+              en cours.
             </p>
           </div>
 
@@ -68,7 +69,7 @@ function TechnicianLayout() {
             onClick={handleLogout}
             type="button"
           >
-            {isLoggingOut ? 'Logging out...' : 'Log out'}
+            {isLoggingOut ? 'Déconnexion...' : 'Se déconnecter'}
           </button>
         </div>
       </aside>
@@ -78,19 +79,19 @@ function TechnicianLayout() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                Connected as
+                Connecté en tant que
               </p>
               <p className="mt-1 text-base font-semibold text-[#111827]">
-                {user?.name || user?.email || 'Technician user'}
+                {user?.name || user?.email || 'Utilisateur technicien'}
               </p>
             </div>
 
             <div className="rounded-xl border border-[#e5e7eb] bg-white px-4 py-3">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                Role
+                Rôle
               </p>
               <p className="mt-1 text-sm font-medium text-[#2563eb]">
-                technicien
+                Technicien
               </p>
             </div>
           </div>

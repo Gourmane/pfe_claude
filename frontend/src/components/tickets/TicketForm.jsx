@@ -11,11 +11,11 @@ const DEFAULT_FORM_VALUES = {
 }
 
 const PRIORITY_OPTIONS = [
-  { label: 'Select priority', value: '' },
-  { label: 'Low', value: 'low' },
-  { label: 'Medium', value: 'medium' },
-  { label: 'High', value: 'high' },
-  { label: 'Urgent', value: 'urgent' },
+  { label: 'Sélectionner une priorité', value: '' },
+  { label: 'Faible', value: 'low' },
+  { label: 'Moyenne', value: 'medium' },
+  { label: 'Haute', value: 'high' },
+  { label: 'Urgente', value: 'urgent' },
 ]
 
 function TextareaField({ error, id, label, name, onChange, required, value }) {
@@ -130,7 +130,12 @@ function TicketForm({
 
   const clientOptions = useMemo(() => {
     const options = [
-      { label: clientsLoading ? 'Loading clients...' : 'Select client', value: '' },
+      {
+        label: clientsLoading
+          ? 'Chargement des clients...'
+          : 'Sélectionner un client',
+        value: '',
+      },
     ]
 
     if (
@@ -185,7 +190,7 @@ function TicketForm({
       <div className="grid gap-5 md:grid-cols-2">
         <Input
           error={fieldErrors.title}
-          label="Title"
+          label="Titre"
           name="title"
           onChange={handleChange}
           required
@@ -194,7 +199,7 @@ function TicketForm({
         <SelectField
           error={fieldErrors.priority}
           id="priority"
-          label="Priority"
+          label="Priorité"
           name="priority"
           onChange={handleChange}
           options={PRIORITY_OPTIONS}
@@ -217,15 +222,15 @@ function TicketForm({
         <div>
           <h3 className="text-sm font-semibold text-[#111827]">Client</h3>
           <p className="mt-1 text-sm text-[#6b7280]">
-            Search for a client, then select the matching record.
+            Recherchez un client, puis sélectionnez la fiche correspondante.
           </p>
         </div>
 
         <Input
-          label="Search client"
+          label="Rechercher un client"
           name="client-search"
           onChange={(event) => onClientSearchChange(event.target.value)}
-          placeholder="Search by name or telephone"
+          placeholder="Rechercher par nom ou téléphone"
           value={clientSearch}
         />
 
@@ -246,14 +251,14 @@ function TicketForm({
 
         {!clientsLoading && clients.length === 0 && !clientsError ? (
           <p className="text-sm text-[#6b7280]">
-            No clients match the current search.
+            Aucun client ne correspond à cette recherche.
           </p>
         ) : null}
       </section>
 
       <div className="flex flex-col-reverse gap-3 border-t border-[#e5e7eb] pt-6 sm:flex-row sm:justify-between">
         <Button onClick={onCancel} type="button" variant="secondary">
-          Cancel
+          Annuler
         </Button>
         <Button loading={loading} type="submit">
           {submitLabel}

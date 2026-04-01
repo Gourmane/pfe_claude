@@ -39,7 +39,7 @@ function ClientEditPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource")
+          setError("Vous n'avez pas accès à cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -90,10 +90,10 @@ function ClientEditPage() {
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
           <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-            Edit client
+            Modifier le client
           </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Update the client profile and keep contact data accurate.
+            Mettez à jour la fiche client et gardez les coordonnées exactes.
           </p>
         </div>
 
@@ -115,10 +115,10 @@ function ClientEditPage() {
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
           <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-            Edit client
+            Modifier le client
           </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Update the client profile and keep contact data accurate.
+            Mettez à jour la fiche client et gardez les coordonnées exactes.
           </p>
         </div>
 
@@ -133,10 +133,10 @@ function ClientEditPage() {
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
           <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-            Edit client
+            Modifier le client
           </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Update the client profile and keep contact data accurate.
+            Mettez à jour la fiche client et gardez les coordonnées exactes.
           </p>
         </div>
 
@@ -149,19 +149,21 @@ function ClientEditPage() {
     <section className="space-y-6">
       <div>
         <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#111827]">Edit client</h1>
+        <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          Modifier le client
+        </h1>
         <p className="mt-2 text-sm text-[#6b7280]">
-          Update the client profile and keep contact data accurate.
+          Mettez à jour la fiche client et gardez les coordonnées exactes.
         </p>
       </div>
 
       <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-[#111827]">
-            Client details
+            Informations du client
           </h2>
           <p className="mt-1 text-sm text-[#6b7280]">
-            Edit the stored information for {client.nom}.
+            Modifiez les informations enregistrées pour {client.nom}.
           </p>
         </div>
 
@@ -172,7 +174,7 @@ function ClientEditPage() {
           loading={saving}
           onCancel={handleCancel}
           onSubmit={handleSubmit}
-          submitLabel="Save changes"
+          submitLabel="Enregistrer les modifications"
         />
       </section>
     </section>

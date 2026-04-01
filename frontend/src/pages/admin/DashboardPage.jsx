@@ -12,22 +12,22 @@ const STAT_CARDS = [
   {
     key: 'total_clients',
     label: 'Total clients',
-    secondary: 'Clients currently managed in the platform.',
+    secondary: 'Clients actuellement suivis dans la plateforme.',
   },
   {
     key: 'total_tickets',
     label: 'Total tickets',
-    secondary: 'All support requests tracked across the workspace.',
+    secondary: 'Demandes de support enregistrées dans l’espace de travail.',
   },
   {
     key: 'pending_tickets',
-    label: 'Pending tickets',
-    secondary: 'Requests waiting for review or assignment.',
+    label: 'Tickets en attente',
+    secondary: 'Demandes à qualifier, affecter ou reprendre en charge.',
   },
   {
     key: 'resolved_tickets',
-    label: 'Resolved tickets',
-    secondary: 'Issues completed and ready for closure follow-up.',
+    label: 'Tickets résolus',
+    secondary: 'Incidents terminés en attente de clôture ou de validation.',
   },
 ]
 
@@ -57,7 +57,7 @@ function DashboardPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource")
+          setError("Vous n'avez pas accès à cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -82,9 +82,11 @@ function DashboardPage() {
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">Dashboard</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Tableau de bord
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Overview of client activity and current support workload.
+            Vue d’ensemble de l’activité client et de la charge de support.
           </p>
         </div>
 
@@ -105,9 +107,11 @@ function DashboardPage() {
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">Dashboard</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Tableau de bord
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Overview of client activity and current support workload.
+            Vue d’ensemble de l’activité client et de la charge de support.
           </p>
         </div>
 
@@ -121,9 +125,11 @@ function DashboardPage() {
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">Dashboard</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Tableau de bord
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Overview of client activity and current support workload.
+            Vue d’ensemble de l’activité client et de la charge de support.
           </p>
         </div>
 
@@ -146,9 +152,11 @@ function DashboardPage() {
     <section className="space-y-6">
       <div>
         <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#111827]">Dashboard</h1>
+        <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          Tableau de bord
+        </h1>
         <p className="mt-2 text-sm text-[#6b7280]">
-          Overview of client activity and current support workload.
+          Vue d’ensemble de l’activité client et de la charge de support.
         </p>
       </div>
 
@@ -172,10 +180,10 @@ function DashboardPage() {
       <section className="rounded-2xl border border-[#e5e7eb] bg-white shadow-sm">
         <div className="border-b border-[#e5e7eb] px-6 py-5">
           <h2 className="text-lg font-semibold text-[#111827]">
-            Recent tickets
+            Tickets récents
           </h2>
           <p className="mt-1 text-sm text-[#6b7280]">
-            The latest support requests created in the platform.
+            Les dernières demandes de support créées dans la plateforme.
           </p>
         </div>
 
@@ -189,16 +197,16 @@ function DashboardPage() {
               <thead className="bg-[#f8fafc]">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                    Title
+                    Titre
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
                     Client
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                    Status
+                    Statut
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                    Priority
+                    Priorité
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
                     Date
@@ -222,7 +230,7 @@ function DashboardPage() {
                       </div>
                     </td>
                     <td className="px-6 py-4 align-top text-sm text-[#6b7280]">
-                      {ticket.client?.name || '--'}
+                      {ticket.client?.nom || '--'}
                     </td>
                     <td className="px-6 py-4 align-top">
                       <Badge variant={ticket.status}>

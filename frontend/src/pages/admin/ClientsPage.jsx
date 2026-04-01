@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  deleteClient,
-  getClients,
-} from '../../api/clients'
+import { deleteClient, getClients } from '../../api/clients'
 import Alert from '../../components/ui/Alert'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
@@ -51,7 +48,7 @@ function ClientsPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource")
+          setError("Vous n'avez pas accès à cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -155,12 +152,12 @@ function ClientsPage() {
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
           <h1 className="mt-1 text-2xl font-bold text-[#111827]">Clients</h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Manage the client directory used across support operations.
+            Gérez l’annuaire client utilisé dans tout le flux de support.
           </p>
         </div>
 
         <Button onClick={() => navigate('/admin/clients/new')} type="button">
-          New client
+          Nouveau client
         </Button>
       </div>
 
@@ -171,20 +168,20 @@ function ClientsPage() {
         >
           <div className="min-w-0 flex-1">
             <Input
-              label="Search clients"
+              label="Rechercher un client"
               name="search"
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Search by name or telephone"
+              placeholder="Rechercher par nom ou téléphone"
               value={searchInput}
             />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button type="submit" variant="primary">
-              Search
+              Rechercher
             </Button>
             <Button onClick={handleClearSearch} type="button" variant="secondary">
-              Clear
+              Réinitialiser
             </Button>
           </div>
         </form>
@@ -203,11 +200,11 @@ function ClientsPage() {
         <Alert message={error} type="error" />
       ) : clients.length === 0 ? (
         <EmptyState
-          action={searchQuery ? 'Clear search' : 'Create client'}
+          action={searchQuery ? 'Effacer la recherche' : 'Créer un client'}
           message={
             searchQuery
-              ? 'No clients match the current search.'
-              : 'No clients are available yet.'
+              ? 'Aucun client ne correspond à votre recherche.'
+              : 'Aucun client n’est disponible pour le moment.'
           }
           onAction={
             searchQuery
@@ -226,10 +223,10 @@ function ClientsPage() {
                       Nom
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Telephone
+                      Téléphone
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
-                      Email
+                      E-mail
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
                       Entreprise
@@ -265,7 +262,7 @@ function ClientsPage() {
                             type="button"
                             variant="secondary"
                           >
-                            Edit
+                            Modifier
                           </Button>
                           <Button
                             onClick={() => handleDeleteClick(client)}
@@ -273,7 +270,7 @@ function ClientsPage() {
                             type="button"
                             variant="danger"
                           >
-                            Delete
+                            Supprimer
                           </Button>
                         </div>
                       </td>
@@ -288,10 +285,14 @@ function ClientsPage() {
         </div>
       )}
 
-      <Modal onClose={handleCloseModal} open={Boolean(deleteTarget)} title="Delete client">
+      <Modal
+        onClose={handleCloseModal}
+        open={Boolean(deleteTarget)}
+        title="Supprimer le client"
+      >
         <div className="space-y-4">
           <p className="leading-6 text-[#6b7280]">
-            Delete {deleteTarget?.nom}? This action cannot be undone.
+            Supprimer {deleteTarget?.nom} ? Cette action est définitive.
           </p>
 
           {deleteError ? <Alert message={deleteError} type="error" /> : null}
@@ -303,7 +304,7 @@ function ClientsPage() {
               type="button"
               variant="secondary"
             >
-              Cancel
+              Annuler
             </Button>
             <Button
               loading={deleteLoading}
@@ -311,7 +312,7 @@ function ClientsPage() {
               type="button"
               variant="danger"
             >
-              Delete client
+              Supprimer le client
             </Button>
           </div>
         </div>

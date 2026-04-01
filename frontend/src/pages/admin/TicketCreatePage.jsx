@@ -93,9 +93,12 @@ function TicketCreatePage() {
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">New ticket</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Nouveau ticket
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Create a new support request and link it to an existing client.
+            Créez une nouvelle demande de support et associez-la à un client
+            existant.
           </p>
         </div>
 
@@ -116,9 +119,12 @@ function TicketCreatePage() {
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">New ticket</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Nouveau ticket
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Create a new support request and link it to an existing client.
+            Créez une nouvelle demande de support et associez-la à un client
+            existant.
           </p>
         </div>
 
@@ -127,18 +133,27 @@ function TicketCreatePage() {
     )
   }
 
-  if (clientsLoaded && !clientsLoading && !clientsError && clients.length === 0 && !clientSearch) {
+  if (
+    clientsLoaded &&
+    !clientsLoading &&
+    !clientsError &&
+    clients.length === 0 &&
+    !clientSearch
+  ) {
     return (
       <section className="space-y-6">
         <div>
           <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">New ticket</h1>
+          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            Nouveau ticket
+          </h1>
           <p className="mt-2 text-sm text-[#6b7280]">
-            Create a new support request and link it to an existing client.
+            Créez une nouvelle demande de support et associez-la à un client
+            existant.
           </p>
         </div>
 
-        <EmptyState message="No clients are available yet. Create a client before opening a ticket." />
+        <EmptyState message="Aucun client n’est disponible. Créez d’abord un client avant d’ouvrir un ticket." />
       </section>
     )
   }
@@ -147,20 +162,23 @@ function TicketCreatePage() {
     <section className="space-y-6">
       <div>
         <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#111827]">New ticket</h1>
+        <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          Nouveau ticket
+        </h1>
         <p className="mt-2 text-sm text-[#6b7280]">
-          Create a new support request and link it to an existing client.
+          Créez une nouvelle demande de support et associez-la à un client
+          existant.
         </p>
       </div>
 
       <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-[#111827]">
-            Ticket details
+            Détails du ticket
           </h2>
           <p className="mt-1 text-sm text-[#6b7280]">
-            Fill in the issue details, select a client, and choose the priority
-            before submitting.
+            Renseignez le problème, sélectionnez le client concerné et la
+            priorité avant l’envoi.
           </p>
         </div>
 
@@ -175,7 +193,7 @@ function TicketCreatePage() {
           onCancel={handleCancel}
           onClientSearchChange={setClientSearch}
           onSubmit={handleSubmit}
-          submitLabel="Create ticket"
+          submitLabel="Créer le ticket"
         />
       </section>
     </section>
