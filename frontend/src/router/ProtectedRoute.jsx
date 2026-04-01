@@ -6,7 +6,7 @@ function GuardSpinner() {
     <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4">
       <div className="flex flex-col items-center gap-3 text-center">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#dbeafe] border-t-[#2563eb]" />
-        <p className="text-sm text-[#6b7280]">Checking your access...</p>
+        <p className="text-sm text-[#6b7280]">Vérification de votre accès...</p>
       </div>
     </main>
   )

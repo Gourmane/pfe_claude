@@ -71,23 +71,17 @@ class ClientController extends Controller
     }
 
     public function destroy(Client $client)
-{
-    if (auth()->user()->role !== 'admin') {
+    {
+        if ($client->tickets()->exists()) {
+            return response()->json([
+                'message' => 'Suppression impossible : ce client possède déjà des tickets.',
+            ], 422);
+        }
+
+        $client->delete();
+
         return response()->json([
-            'message' => 'Accès refusé'
-        ], 403);
+            'message' => 'Client supprimé.',
+        ]);
     }
-
-    if ($client->tickets()->exists()) {
-        return response()->json([
-            'message' => 'Suppression impossible : ce client possède déjà des tickets.'
-        ], 422);
-    }
-
-    $client->delete();
-
-    return response()->json([
-        'message' => 'Client supprimé'
-    ]);
-}
 }

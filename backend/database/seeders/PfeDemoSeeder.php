@@ -80,6 +80,73 @@ class PfeDemoSeeder extends Seeder
                 );
             }
         }
+
+        // ========================================
+        // EXTRA TICKETS FOR PAGINATION TEST (SAFE)
+        // ========================================
+        $clientIds = $clients->pluck('id')->values();
+        $technicianIds = collect($technicians)->pluck('id')->values();
+
+        collect([
+            [
+                'title' => 'Pagination test 01',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'pending',
+                'priority' => 'medium',
+                'client_id' => $clientIds[0],
+                'technician_id' => null,
+            ],
+            [
+                'title' => 'Pagination test 02',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'in_progress',
+                'priority' => 'high',
+                'client_id' => $clientIds[1],
+                'technician_id' => $technicianIds[0],
+            ],
+            [
+                'title' => 'Pagination test 03',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'resolved',
+                'priority' => 'low',
+                'client_id' => $clientIds[2],
+                'technician_id' => $technicianIds[1],
+            ],
+            [
+                'title' => 'Pagination test 04',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'pending',
+                'priority' => 'high',
+                'client_id' => $clientIds[3],
+                'technician_id' => null,
+            ],
+            [
+                'title' => 'Pagination test 05',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'in_progress',
+                'priority' => 'medium',
+                'client_id' => $clientIds[4],
+                'technician_id' => $technicianIds[0],
+            ],
+            [
+                'title' => 'Pagination test 06',
+                'description' => 'Ticket supplémentaire pour vérifier la pagination de la liste.',
+                'status' => 'resolved',
+                'priority' => 'low',
+                'client_id' => $clientIds[5],
+                'technician_id' => $technicianIds[1],
+            ],
+        ])->each(function (array $ticketData) use ($admin) {
+            Ticket::create([
+                'title' => $ticketData['title'],
+                'description' => $ticketData['description'],
+                'status' => $ticketData['status'],
+                'priority' => $ticketData['priority'],
+                'client_id' => $ticketData['client_id'],
+                'technician_id' => $ticketData['technician_id'],
+                'created_by' => $admin->id,
+            ]);
+        });
     }
 
     private function upsertUser(string $name, string $email, string $role): User
