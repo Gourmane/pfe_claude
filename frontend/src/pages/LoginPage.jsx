@@ -3,10 +3,10 @@ import { Navigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 
 const INPUT_CLASS_NAME =
-  'mt-2 h-11 w-full rounded-xl border border-[#e5e7eb] bg-white px-3 text-sm text-[#111827] outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#dbeafe] disabled:cursor-not-allowed disabled:bg-slate-50'
+  'mt-2 h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100 disabled:cursor-not-allowed disabled:bg-surface-section/50'
 
 const PANEL_CLASS_NAME =
-  'w-full max-w-md rounded-2xl border border-[#e5e7eb] bg-white p-8 shadow-[0_18px_40px_rgba(17,24,39,0.06)]'
+  'w-full max-w-md rounded-3xl bg-surface-container-lowest p-8 shadow-[0_12px_48px_rgba(15,42,68,0.08)]'
 
 function getDashboardPath(role) {
   if (role === 'admin') {
@@ -47,8 +47,8 @@ function LoginPage() {
     return (
       <div className="flex min-h-[240px] items-center justify-center">
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#dbeafe] border-t-[#2563eb]" />
-          <p className="text-sm text-[#6b7280]">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-navy-100 border-t-navy-700" />
+          <p className="text-sm font-medium text-navy-400">
             Restauration de votre session...
           </p>
         </div>
@@ -63,11 +63,11 @@ function LoginPage() {
   return (
     <section className={PANEL_CLASS_NAME}>
       <div className="space-y-2">
-        <p className="text-sm font-medium text-[#2563eb]">AI IT Assistant</p>
-        <h1 className="text-3xl font-bold tracking-tight text-[#111827]">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Precision IT</p>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-navy-900">
           Connexion à votre espace
         </h1>
-        <p className="text-sm leading-6 text-[#6b7280]">
+        <p className="text-sm leading-7 text-navy-400">
           Accédez à la plateforme interne pour gérer les tickets, suivre les
           opérations et reprendre votre session en toute sécurité.
         </p>
@@ -75,7 +75,7 @@ function LoginPage() {
 
       <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
         <div>
-          <label className="text-sm font-medium text-[#111827]" htmlFor="email">
+          <label className="text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor="email">
             E-mail
           </label>
           <input
@@ -93,7 +93,7 @@ function LoginPage() {
 
         <div>
           <label
-            className="text-sm font-medium text-[#111827]"
+            className="text-[10px] font-bold uppercase tracking-wider text-navy-400"
             htmlFor="password"
           >
             Mot de passe
@@ -113,7 +113,7 @@ function LoginPage() {
 
         {error ? (
           <div
-            className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="rounded-xl border-l-[3px] border-l-red-500 bg-red-50/70 px-4 py-3 text-sm font-medium text-red-800"
             role="alert"
           >
             {error}
@@ -121,7 +121,7 @@ function LoginPage() {
         ) : null}
 
         <button
-          className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#2563eb] px-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#1d4ed8] disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-gradient-to-b from-[#0F2A44] to-[#245381] px-4 text-sm font-semibold text-white shadow-[0_2px_4px_rgba(15,42,68,0.3),inset_0_1px_0_rgba(255,255,255,0.06)] transition-all duration-200 hover:-translate-y-[0.5px] hover:shadow-[0_4px_12px_rgba(15,42,68,0.3),inset_0_1px_0_rgba(255,255,255,0.06)] active:translate-y-[0.5px] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
           disabled={isSubmitting}
           type="submit"
         >

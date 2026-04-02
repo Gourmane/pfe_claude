@@ -210,9 +210,9 @@ function TicketsPage() {
     <section className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">Tickets</h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">Tickets</h1>
+          <p className="mt-2 text-sm text-navy-400">
             Consultez, filtrez et pilotez les demandes de support de tous les
             clients.
           </p>
@@ -240,10 +240,10 @@ function TicketsPage() {
       />
 
       {loading ? (
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6 py-16 shadow-sm">
+        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
           <div className="space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm text-[#6b7280]">
+            <p className="text-center text-sm font-medium text-navy-400">
               Chargement des tickets...
             </p>
           </div>
@@ -256,41 +256,41 @@ function TicketsPage() {
           message={
             hasActiveFilters
               ? 'Aucun ticket ne correspond aux filtres actuels.'
-              : 'Aucun ticket n’est disponible pour le moment.'
+              : 'Aucun ticket n\u2019est disponible pour le moment.'
           }
           onAction={hasActiveFilters ? handleResetFilters : undefined}
         />
       ) : (
         <div className="space-y-4">
-          <section className="overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-sm">
+          <section className="overflow-hidden rounded-2xl bg-surface-container-lowest shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-[#e5e7eb]">
-                <thead className="bg-[#f8fafc]">
+              <table className="min-w-full text-left">
+                <thead className="bg-surface-section">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Titre
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Client
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Technicien
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Statut
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Priorité
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e5e7eb] bg-white">
+                <tbody className="divide-y divide-navy-100/50">
                   {tickets.map((ticket) => (
                     <tr
-                      className="cursor-pointer transition-colors duration-200 hover:bg-[#f8fafc]"
+                      className="cursor-pointer transition-colors duration-200 hover:bg-navy-50/50"
                       key={ticket.id}
                       onClick={() => handleRowNavigation(ticket.id)}
                       onKeyDown={(event) => {
@@ -304,18 +304,18 @@ function TicketsPage() {
                     >
                       <td className="px-6 py-4 align-top">
                         <div>
-                          <p className="text-sm font-medium text-[#111827]">
+                          <p className="text-sm font-semibold text-navy-800">
                             {ticket.title || '--'}
                           </p>
-                          <p className="mt-1 text-sm text-[#6b7280]">
+                          <p className="mt-1 text-xs font-medium text-navy-400">
                             #{ticket.id}
                           </p>
                         </div>
                       </td>
-                      <td className="px-6 py-4 align-top text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 align-top text-sm font-medium text-navy-600">
                         {ticket.client?.nom || '--'}
                       </td>
-                      <td className="px-6 py-4 align-top text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 align-top text-sm font-medium text-navy-600">
                         {ticket.technician?.name || '--'}
                       </td>
                       <td className="px-6 py-4 align-top">
@@ -328,7 +328,7 @@ function TicketsPage() {
                           {formatLabel(ticket.priority)}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 align-top text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 align-top text-sm text-navy-400">
                         {formatDate(ticket.created_at)}
                       </td>
                     </tr>

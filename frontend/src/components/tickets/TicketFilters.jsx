@@ -27,13 +27,13 @@ function SelectField({
   return (
     <div className="space-y-2">
       <label
-        className="block text-sm font-medium text-[#111827]"
+        className="block text-[10px] font-bold uppercase tracking-wider text-navy-400"
         htmlFor={name}
       >
         {label}
       </label>
       <select
-        className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-[#111827] outline-none transition focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-[#9ca3af]"
+        className="h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100 disabled:cursor-not-allowed disabled:bg-surface-section/50 disabled:text-navy-400"
         disabled={disabled}
         id={name}
         name={name}
@@ -63,15 +63,15 @@ function TicketFilters({
     clientsLoading && clients.length === 0
       ? [{ label: 'Chargement des clients...', value: '' }]
       : [
-          { label: 'Tous les clients', value: '' },
-          ...clients.map((client) => ({
-            label: client.nom,
-            value: String(client.id),
-          })),
-        ]
+        { label: 'Tous les clients', value: '' },
+        ...clients.map((client) => ({
+          label: client.nom,
+          value: String(client.id),
+        })),
+      ]
 
   return (
-    <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+    <section className="rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <SelectField
           label="Statut"

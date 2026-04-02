@@ -11,7 +11,7 @@ function Spinner({ size = 'md' }) {
     <div className="flex items-center justify-center">
       <div
         aria-label="Chargement"
-        className={`animate-spin rounded-full border-blue-100 border-t-blue-600 ${sizeClassName}`}
+        className={`animate-spin rounded-full border-navy-100 border-t-navy-700 ${sizeClassName}`}
         role="status"
       />
     </div>

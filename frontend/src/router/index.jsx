@@ -36,10 +36,10 @@ const TechnicianTicketsPage = lazy(
 
 function RouteSpinner() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f5f7fb] px-4">
+    <main className="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4">
       <div className="flex flex-col items-center gap-3 text-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#dbeafe] border-t-[#2563eb]" />
-        <p className="text-sm text-[#6b7280]">Chargement...</p>
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary-container border-t-primary" />
+        <p className="text-sm font-medium text-slate-500">Chargement...</p>
       </div>
     </main>
   )

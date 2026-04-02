@@ -12,11 +12,11 @@ function Pagination({ meta, onPageChange }) {
   return (
     <nav
       aria-label="Pagination"
-      className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-4 rounded-2xl bg-surface-container-lowest p-4 shadow-[0_2px_8px_rgba(15,42,68,0.04)] sm:flex-row sm:items-center sm:justify-between"
     >
-      <p className="text-sm text-[#6b7280]">
-        Page <span className="font-medium text-[#111827]">{currentPage}</span> sur{' '}
-        <span className="font-medium text-[#111827]">{lastPage}</span>
+      <p className="text-sm text-navy-400">
+        Page <span className="font-semibold tracking-tight text-navy-900">{currentPage}</span> sur{' '}
+        <span className="font-semibold tracking-tight text-navy-900">{lastPage}</span>
       </p>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -32,10 +32,10 @@ function Pagination({ meta, onPageChange }) {
         {pageNumbers.map((pageNumber) => (
           <button
             className={[
-              'inline-flex h-9 min-w-9 items-center justify-center rounded-xl border px-3 text-sm font-medium transition duration-200',
+              'inline-flex h-9 min-w-9 items-center justify-center rounded-xl px-3 text-sm font-medium transition-all duration-200',
               pageNumber === currentPage
-                ? 'border-blue-200 bg-blue-50 text-blue-700'
-                : 'border-gray-200 bg-white text-[#6b7280] hover:bg-gray-50 hover:text-[#111827]',
+                ? 'bg-navy-50 text-navy-800 shadow-[0_1px_2px_rgba(15,42,68,0.08)]'
+                : 'bg-surface-section text-navy-500 hover:bg-navy-50 hover:text-navy-800',
             ].join(' ')}
             key={pageNumber}
             onClick={() => onPageChange(pageNumber)}

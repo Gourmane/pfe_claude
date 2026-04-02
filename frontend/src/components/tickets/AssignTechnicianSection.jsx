@@ -29,19 +29,19 @@ function AssignTechnicianSection({
   }
 
   return (
-    <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+    <section className="space-y-5 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
       <div>
-        <h2 className="text-lg font-semibold text-[#111827]">Assignation</h2>
-        <p className="mt-1 text-sm text-[#6b7280]">
+        <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">Assignation</h2>
+        <p className="mt-1 text-sm text-navy-400">
           Attribuez ce ticket au technicien responsable de l'intervention.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+      <div className="rounded-2xl bg-surface p-4 text-center">
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-navy-400">
           Technicien actuel
         </p>
-        <p className="mt-2 text-sm font-medium text-[#111827]">
+        <p className="mt-1.5 text-sm font-medium text-navy-900">
           {currentTechnicianName || 'Non assigné'}
         </p>
       </div>
@@ -49,15 +49,15 @@ function AssignTechnicianSection({
       {error ? <Alert message={error} type="error" /> : null}
 
       <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <label
-            className="block text-sm font-medium text-[#111827]"
+            className="block text-[10px] font-bold uppercase tracking-wider text-navy-400"
             htmlFor="technician_id"
           >
             Technicien
           </label>
           <select
-            className="h-11 w-full rounded-xl border border-[#e5e7eb] bg-white px-3 text-sm text-[#111827] outline-none transition focus:border-[#2563eb] focus:ring-4 focus:ring-[#dbeafe]"
+            className="h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100"
             id="technician_id"
             onChange={(event) => setSelectedTechnicianId(event.target.value)}
             value={selectedTechnicianId}
@@ -72,7 +72,7 @@ function AssignTechnicianSection({
         </div>
 
         {technicians.length === 0 ? (
-          <p className="text-sm text-[#6b7280]">
+          <p className="text-sm font-medium text-navy-400">
             Aucun technicien n'est disponible pour le moment.
           </p>
         ) : null}

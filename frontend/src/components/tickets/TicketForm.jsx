@@ -22,18 +22,18 @@ function TextareaField({ error, id, label, name, onChange, required, value }) {
   const errorId = error ? `${id}-error` : undefined
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#111827]" htmlFor={id}>
+    <div className="space-y-1.5">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
         {label}
       </label>
       <textarea
         aria-describedby={errorId}
         aria-invalid={error ? 'true' : 'false'}
         className={[
-          'min-h-36 w-full rounded-xl border bg-white px-3 py-3 text-sm text-[#111827] outline-none transition focus:ring-4',
+          'min-h-36 w-full rounded-xl bg-surface-section px-3.5 py-3 text-sm text-navy-900 border border-transparent outline-none transition-all placeholder:text-navy-300',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-            : 'border-gray-200 focus:border-blue-600 focus:ring-blue-100',
+            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100'
+            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
         ].join(' ')}
         id={id}
         name={name}
@@ -63,18 +63,18 @@ function SelectField({
   const errorId = error ? `${id}-error` : undefined
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#111827]" htmlFor={id}>
+    <div className="space-y-1.5">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
         {label}
       </label>
       <select
         aria-describedby={errorId}
         aria-invalid={error ? 'true' : 'false'}
         className={[
-          'h-11 w-full rounded-xl border bg-white px-3 text-sm text-[#111827] outline-none transition focus:ring-4',
+          'h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-            : 'border-gray-200 focus:border-blue-600 focus:ring-blue-100',
+            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100'
+            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
         ].join(' ')}
         id={id}
         name={name}
@@ -218,10 +218,10 @@ function TicketForm({
         value={formValues.description}
       />
 
-      <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
+      <section className="space-y-4 rounded-2xl bg-surface-container-lowest p-5 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
         <div>
-          <h3 className="text-sm font-semibold text-[#111827]">Client</h3>
-          <p className="mt-1 text-sm text-[#6b7280]">
+          <h3 className="font-display text-lg font-bold tracking-tight text-navy-900">Client</h3>
+          <p className="mt-1 text-sm text-navy-400">
             Recherchez un client, puis sélectionnez la fiche correspondante.
           </p>
         </div>
@@ -250,13 +250,13 @@ function TicketForm({
         ) : null}
 
         {!clientsLoading && clients.length === 0 && !clientsError ? (
-          <p className="text-sm text-[#6b7280]">
+          <p className="text-sm text-navy-400">
             Aucun client ne correspond à cette recherche.
           </p>
         ) : null}
       </section>
 
-      <div className="flex flex-col-reverse gap-3 border-t border-[#e5e7eb] pt-6 sm:flex-row sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
         <Button onClick={onCancel} type="button" variant="secondary">
           Annuler
         </Button>

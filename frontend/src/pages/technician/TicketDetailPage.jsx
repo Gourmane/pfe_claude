@@ -19,7 +19,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { formatDate, formatLabel } from '../../utils/ticketHelpers'
 
 const FALLBACK_ERROR_MESSAGE = 'Une erreur est survenue.'
-const FORBIDDEN_MESSAGE = "Vous n'avez pas accès à cette ressource"
+const FORBIDDEN_MESSAGE = "Vous n'avez pas acc\u00e8s \u00e0 cette ressource"
 
 function getApiErrorMessage(requestError) {
   if (requestError?.response?.status === 403) {
@@ -36,10 +36,10 @@ function getTicketSummary(ticket) {
 function DetailItem({ label, value }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[#111827]">{value || '--'}</p>
+      <p className="mt-1 text-sm font-medium text-navy-900">{value || '--'}</p>
     </div>
   )
 }
@@ -160,20 +160,20 @@ function TicketDetailPage() {
     return (
       <section className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Technicien</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-            Détail du ticket
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700">Technicien</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
+            D\u00e9tail du ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Consultez votre intervention, faites progresser le ticket et tenez
-            l'équipe informée.
+            l'\u00e9quipe inform\u00e9e.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6 py-16 shadow-sm">
+        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
           <div className="space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm text-[#6b7280]">
+            <p className="text-center text-sm font-medium text-navy-400">
               Chargement du ticket...
             </p>
           </div>
@@ -187,13 +187,13 @@ function TicketDetailPage() {
       <section className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm font-medium text-[#2563eb]">Technicien</p>
-            <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-              Détail du ticket
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700">Technicien</p>
+            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
+              D\u00e9tail du ticket
             </h1>
-            <p className="mt-2 text-sm text-[#6b7280]">
+            <p className="mt-2 text-sm text-navy-400">
               Consultez votre intervention, faites progresser le ticket et tenez
-              l'équipe informée.
+              l'\u00e9quipe inform\u00e9e.
             </p>
           </div>
           <Button
@@ -214,13 +214,13 @@ function TicketDetailPage() {
       <section className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm font-medium text-[#2563eb]">Technicien</p>
-            <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-              Détail du ticket
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700">Technicien</p>
+            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
+              D\u00e9tail du ticket
             </h1>
-            <p className="mt-2 text-sm text-[#6b7280]">
+            <p className="mt-2 text-sm text-navy-400">
               Consultez votre intervention, faites progresser le ticket et tenez
-              l'équipe informée.
+              l'\u00e9quipe inform\u00e9e.
             </p>
           </div>
           <Button
@@ -244,13 +244,13 @@ function TicketDetailPage() {
     <section className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Technicien</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-700">Technicien</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
             Ticket #{ticket.id}
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Consultez votre intervention, faites progresser le ticket et tenez
-            l'équipe informée.
+            l'\u00e9quipe inform\u00e9e.
           </p>
         </div>
 
@@ -264,8 +264,8 @@ function TicketDetailPage() {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]">
         <div className="space-y-6">
-          <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
-            <div className="flex flex-wrap gap-2 border-b border-[#e5e7eb] pb-5">
+          <section className="rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+            <div className="flex flex-wrap gap-2 pb-5">
               <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
               <Badge variant={ticket.priority}>
                 {formatLabel(ticket.priority)}
@@ -274,26 +274,33 @@ function TicketDetailPage() {
 
             <div className="space-y-6 pt-6">
               <div>
-                <p className="text-sm text-[#6b7280]">
-                  Créé le {formatDate(ticket.created_at)}
+                <p className="text-sm font-medium text-navy-400">
+                  Cr\u00e9\u00e9 le {formatDate(ticket.created_at)}
                 </p>
-                <h2 className="mt-3 text-xl font-semibold text-[#111827]">
+                <h2 className="mt-3 font-display text-xl font-bold tracking-tight text-navy-900">
                   {ticket.title || '--'}
                 </h2>
-                <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[#6b7280]">
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-navy-500">
                   {ticket.description || '--'}
                 </p>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
-                  <h3 className="text-base font-semibold text-[#111827]">
-                    Informations du client
-                  </h3>
+                <section className="space-y-4 rounded-2xl bg-surface p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50">
+                      <svg className="h-4 w-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
+                      Informations du client
+                    </h3>
+                  </div>
                   <DetailItem label="Nom" value={ticket.client?.nom} />
                   <DetailItem label="E-mail" value={ticket.client?.email} />
                   <DetailItem
-                    label="Téléphone"
+                    label="T\u00e9l\u00e9phone"
                     value={ticket.client?.telephone}
                   />
                   <DetailItem
@@ -302,21 +309,28 @@ function TicketDetailPage() {
                   />
                 </section>
 
-                <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
-                  <h3 className="text-base font-semibold text-[#111827]">
-                    Responsabilité
-                  </h3>
+                <section className="space-y-4 rounded-2xl bg-surface p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50">
+                      <svg className="h-4 w-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0 0v2.5m0-2.5h2.5M7 14H4.5m4.5-4a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zm8.5 4.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0zm-3.5-10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
+                      Responsabilit\u00e9
+                    </h3>
+                  </div>
                   <DetailItem
                     label="Technicien"
-                    value={ticket.technician?.name || 'Non assigné'}
+                    value={ticket.technician?.name || 'Non assign\u00e9'}
                   />
-                  <DetailItem label="Créé par" value={ticket.creator?.name} />
+                  <DetailItem label="Cr\u00e9\u00e9 par" value={ticket.creator?.name} />
                   <DetailItem
-                    label="Résolu le"
+                    label="R\u00e9solu le"
                     value={formatDate(ticket.resolved_at)}
                   />
                   <DetailItem
-                    label="Clôturé le"
+                    label="Cl\u00f4tur\u00e9 le"
                     value={formatDate(ticket.closed_at)}
                   />
                 </section>
@@ -334,23 +348,23 @@ function TicketDetailPage() {
         </div>
 
         <div className="space-y-6">
-          <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+          <section className="space-y-5 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
             <div>
-              <h2 className="text-lg font-semibold text-[#111827]">
+              <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">
                 Flux de traitement
               </h2>
-              <p className="mt-1 text-sm text-[#6b7280]">
+              <p className="mt-1 text-sm text-navy-400">
                 Faites avancer le ticket selon son statut actuel.
               </p>
             </div>
 
             {statusError ? <Alert message={statusError} type="error" /> : null}
 
-            <div className="rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+            <div className="rounded-2xl bg-surface p-5 text-center">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-navy-400">
                 Statut actuel
               </p>
-              <div className="mt-3">
+              <div className="mt-2">
                 <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
               </div>
             </div>

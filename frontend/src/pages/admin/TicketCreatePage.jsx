@@ -92,20 +92,20 @@ function TicketCreatePage() {
     return (
       <section className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
             Nouveau ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Créez une nouvelle demande de support et associez-la à un client
             existant.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6 py-16 shadow-sm">
+        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
           <div className="space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm text-[#6b7280]">
+            <p className="text-center text-sm font-medium text-navy-400">
               Chargement des clients...
             </p>
           </div>
@@ -118,11 +118,11 @@ function TicketCreatePage() {
     return (
       <section className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
             Nouveau ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Créez une nouvelle demande de support et associez-la à un client
             existant.
           </p>
@@ -143,17 +143,17 @@ function TicketCreatePage() {
     return (
       <section className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
             Nouveau ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Créez une nouvelle demande de support et associez-la à un client
             existant.
           </p>
         </div>
 
-        <EmptyState message="Aucun client n’est disponible. Créez d’abord un client avant d’ouvrir un ticket." />
+        <EmptyState message="Aucun client n'est disponible. Créez d'abord un client avant d'ouvrir un ticket." />
       </section>
     )
   }
@@ -161,24 +161,24 @@ function TicketCreatePage() {
   return (
     <section className="space-y-6">
       <div>
-        <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-        <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+        <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
           Nouveau ticket
         </h1>
-        <p className="mt-2 text-sm text-[#6b7280]">
+        <p className="mt-2 text-sm text-navy-400">
           Créez une nouvelle demande de support et associez-la à un client
           existant.
         </p>
       </div>
 
-      <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+      <section className="rounded-2xl bg-surface-container-lowest p-6 lg:p-8 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-[#111827]">
+          <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">
             Détails du ticket
           </h2>
-          <p className="mt-1 text-sm text-[#6b7280]">
+          <p className="mt-1 text-sm text-navy-400">
             Renseignez le problème, sélectionnez le client concerné et la
-            priorité avant l’envoi.
+            priorité avant l'envoi.
           </p>
         </div>
 

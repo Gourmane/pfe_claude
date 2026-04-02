@@ -103,7 +103,7 @@ function ClientForm({
         />
       </div>
 
-      <div className="flex flex-col-reverse gap-3 border-t border-[#e5e7eb] pt-6 sm:flex-row sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
         <Button onClick={onCancel} type="button" variant="secondary">
           Annuler
         </Button>

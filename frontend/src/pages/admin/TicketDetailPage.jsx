@@ -56,18 +56,18 @@ function TextareaField({ error, id, label, name, onChange, required, value }) {
   const errorId = error ? `${id}-error` : undefined
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#111827]" htmlFor={id}>
+    <div className="space-y-1.5">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
         {label}
       </label>
       <textarea
         aria-describedby={errorId}
         aria-invalid={error ? 'true' : 'false'}
         className={[
-          'min-h-36 w-full rounded-xl border bg-white px-3 py-3 text-sm text-[#111827] outline-none transition focus:ring-4',
+          'min-h-36 w-full rounded-xl bg-surface-section px-3.5 py-3 text-sm text-navy-900 border border-transparent outline-none transition-all',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-            : 'border-[#e5e7eb] focus:border-[#2563eb] focus:ring-[#dbeafe]',
+            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
         ].join(' ')}
         id={id}
         name={name}
@@ -97,18 +97,18 @@ function SelectField({
   const errorId = error ? `${id}-error` : undefined
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#111827]" htmlFor={id}>
+    <div className="space-y-1.5">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
         {label}
       </label>
       <select
         aria-describedby={errorId}
         aria-invalid={error ? 'true' : 'false'}
         className={[
-          'h-11 w-full rounded-xl border bg-white px-3 text-sm text-[#111827] outline-none transition focus:ring-4',
+          'h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-            : 'border-[#e5e7eb] focus:border-[#2563eb] focus:ring-[#dbeafe]',
+            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
         ].join(' ')}
         id={id}
         name={name}
@@ -135,10 +135,10 @@ function SelectField({
 function DetailItem({ label, value }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
         {label}
       </p>
-      <p className="mt-2 text-sm text-[#111827]">{value || '--'}</p>
+      <p className="mt-1.5 text-sm font-medium text-navy-900">{value || '--'}</p>
     </div>
   )
 }
@@ -341,20 +341,20 @@ function TicketDetailPage() {
     return (
       <section className="space-y-6">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Administrateur</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
             Détail du ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Consultez la demande, gérez l'assignation et faites avancer le
             traitement.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6 py-16 shadow-sm">
+        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
           <div className="space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm text-[#6b7280]">
+            <p className="text-center text-sm font-medium text-navy-400">
               Chargement du ticket...
             </p>
           </div>
@@ -368,11 +368,11 @@ function TicketDetailPage() {
       <section className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm font-medium text-[#2563eb]">Administrateur</p>
-            <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
+            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
               Détail du ticket
             </h1>
-            <p className="mt-2 text-sm text-[#6b7280]">
+            <p className="mt-2 text-sm text-navy-400">
               Consultez la demande, gérez l'assignation et faites avancer le
               traitement.
             </p>
@@ -392,11 +392,11 @@ function TicketDetailPage() {
       <section className="space-y-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="text-sm font-medium text-[#2563eb]">Administrateur</p>
-            <h1 className="mt-1 text-2xl font-bold text-[#111827]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
+            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
               Détail du ticket
             </h1>
-            <p className="mt-2 text-sm text-[#6b7280]">
+            <p className="mt-2 text-sm text-navy-400">
               Consultez la demande, gérez l'assignation et faites avancer le
               traitement.
             </p>
@@ -419,11 +419,11 @@ function TicketDetailPage() {
     <section className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Administrateur</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">
-            Ticket #{ticket.id}
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
+            Détail du ticket
           </h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
+          <p className="mt-2 text-sm text-navy-400">
             Consultez la demande, gérez l'assignation et faites avancer le
             traitement.
           </p>
@@ -436,8 +436,8 @@ function TicketDetailPage() {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]">
         <div className="space-y-6">
-          <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
-            <div className="flex flex-col gap-4 border-b border-[#e5e7eb] pb-5 sm:flex-row sm:items-start sm:justify-between">
+          <section className="rounded-2xl bg-surface-container-lowest p-6 lg:p-8 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+            <div className="flex flex-col gap-4 pb-6 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <div className="flex flex-wrap gap-2">
                   <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
@@ -445,7 +445,7 @@ function TicketDetailPage() {
                     {formatLabel(ticket.priority)}
                   </Badge>
                 </div>
-                <p className="mt-3 text-sm text-[#6b7280]">
+                <p className="mt-3 text-sm font-medium text-navy-400">
                   Créé le {formatDate(ticket.created_at)}
                 </p>
               </div>
@@ -491,7 +491,7 @@ function TicketDetailPage() {
                   value={editValues.priority}
                 />
 
-                <div className="flex flex-col-reverse gap-3 border-t border-[#e5e7eb] pt-6 sm:flex-row sm:justify-between">
+                <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
                   <Button
                     onClick={handleCancelEditing}
                     type="button"
@@ -507,19 +507,26 @@ function TicketDetailPage() {
             ) : (
               <div className="space-y-6 pt-6">
                 <div>
-                  <h2 className="text-xl font-semibold text-[#111827]">
+                  <h2 className="font-display text-xl font-bold tracking-tight text-navy-900">
                     {ticket.title || '--'}
                   </h2>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[#6b7280]">
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-navy-500">
                     {ticket.description || '--'}
                   </p>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                  <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
-                    <h3 className="text-base font-semibold text-[#111827]">
-                      Informations du client
-                    </h3>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <section className="space-y-4 rounded-2xl bg-surface p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-orange-50 rounded-lg">
+                        <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        </svg>
+                      </div>
+                      <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
+                        Informations du client
+                      </h3>
+                    </div>
                     <DetailItem label="Nom" value={ticket.client?.nom} />
                     <DetailItem label="E-mail" value={ticket.client?.email} />
                     <DetailItem
@@ -532,10 +539,17 @@ function TicketDetailPage() {
                     />
                   </section>
 
-                  <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-5">
-                    <h3 className="text-base font-semibold text-[#111827]">
-                      Responsabilité
-                    </h3>
+                  <section className="space-y-4 rounded-2xl bg-surface p-6">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-orange-50 rounded-lg">
+                        <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 013 0m-6-3V11m0-5.5a1.5 1.5 0 013 0v4m0-4V11" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        </svg>
+                      </div>
+                      <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
+                        Responsabilité
+                      </h3>
+                    </div>
                     <DetailItem
                       label="Technicien"
                       value={ticket.technician?.name || 'Non assigné'}
@@ -565,23 +579,23 @@ function TicketDetailPage() {
         </div>
 
         <div className="space-y-6">
-          <section className="space-y-4 rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+          <section className="space-y-4 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
             <div>
-              <h2 className="text-lg font-semibold text-[#111827]">
+              <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">
                 Flux de traitement
               </h2>
-              <p className="mt-1 text-sm text-[#6b7280]">
+              <p className="mt-1 text-sm text-navy-400">
                 Faites avancer le ticket selon son statut actuel.
               </p>
             </div>
 
             {statusError ? <Alert message={statusError} type="error" /> : null}
 
-            <div className="rounded-2xl border border-[#e5e7eb] bg-[#f8fafc] p-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+            <div className="rounded-2xl bg-surface p-5 text-center flex flex-col items-center justify-center">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                 Statut actuel
               </p>
-              <div className="mt-3">
+              <div className="mt-2.5">
                 <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
               </div>
             </div>

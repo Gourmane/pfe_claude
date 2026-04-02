@@ -1,7 +1,7 @@
 const TYPE_CLASS_NAMES = {
-  success: 'border-green-200 bg-green-50 text-green-700',
-  error: 'border-red-200 bg-red-50 text-red-700',
-  info: 'border-sky-200 bg-sky-50 text-sky-700',
+  success: 'bg-emerald-50/70 text-emerald-800 border-l-[3px] border-l-emerald-500',
+  error: 'bg-red-50/70 text-red-800 border-l-[3px] border-l-red-500',
+  info: 'bg-navy-50 text-navy-700 border-l-[3px] border-l-navy-400',
 }
 
 function Alert({ type = 'info', message, onClose }) {
@@ -9,7 +9,7 @@ function Alert({ type = 'info', message, onClose }) {
 
   return (
     <div
-      className={`flex items-start justify-between gap-3 rounded-2xl border px-4 py-3 text-sm ${typeClassName}`}
+      className={`flex items-start justify-between gap-3 rounded-xl px-4 py-3 text-sm ${typeClassName}`}
       role="alert"
     >
       <p className="leading-6">{message}</p>

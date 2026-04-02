@@ -6,18 +6,18 @@ function Input({ label, error, type = 'text', id, ...rest }) {
   const errorId = error ? `${inputId}-error` : undefined
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-[#111827]" htmlFor={inputId}>
+    <div className="space-y-1.5">
+      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={inputId}>
         {label}
       </label>
       <input
         aria-describedby={errorId}
         aria-invalid={error ? 'true' : 'false'}
         className={[
-          'h-11 w-full rounded-xl border bg-white px-3 text-sm text-[#111827] outline-none transition focus:ring-4',
+          'h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all',
           error
-            ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
-            : 'border-gray-200 focus:border-blue-600 focus:ring-blue-100',
+            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
         ].join(' ')}
         id={inputId}
         type={type}

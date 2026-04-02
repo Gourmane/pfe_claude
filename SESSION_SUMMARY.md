@@ -1,6 +1,6 @@
 # Session Summary — AI IT Assistant Platform (PFE)
 
-_Last updated: 2026-03-31_
+_Last updated: 2026-04-02_
 
 ---
 
@@ -24,9 +24,9 @@ _Last updated: 2026-03-31_
 
 ## 2. Current Implementation Status
 
-**Backend:** Complete. All 24 API endpoints working. Tests passing.
+**Backend:** Complete. All 24 API endpoints working.
 
-**Frontend:** Phases 1-8 complete and committed. Phase 9 is next.
+**Frontend:** All 11 phases complete. Project is demo-ready and audited.
 
 | Phase | Name | Status |
 |-------|------|--------|
@@ -38,11 +38,11 @@ _Last updated: 2026-03-31_
 | 6 | Client Management (full CRUD) | Done |
 | 7 | Ticket List + Filters (admin + technician) | Done |
 | 8 | Ticket Creation (admin form) | Done |
-| 9 | Ticket Detail + Status + Comments + AI | **Not started** |
-| 10 | Technician Dashboard | Not started |
-| 11 | Polish, QA, Demo Readiness | Not started |
+| 9 | Ticket Detail + Status + Comments + AI | Done |
+| 10 | Technician Dashboard | Done |
+| 11 | Polish, QA, Demo Readiness | Done |
 
-**Git state:** 2 commits. Latest: `3c26f4c frontend pahse 8 done redy to phase 9`. Clean working tree.
+**Audit:** `REVIEW_ALL.md` created at project root. All critical and major issues fixed.
 
 ---
 
@@ -55,16 +55,19 @@ frontend/src/
 │   ├── axios.js              # Configured Axios instance (interceptors)
 │   ├── auth.js               # login(), logout(), getMe()
 │   ├── clients.js            # getClients(), getClient(), createClient(), updateClient(), deleteClient()
-│   ├── dashboard.js          # getAdminDashboard()
-│   └── tickets.js            # getTickets(), createTicket()
+│   ├── dashboard.js          # getAdminDashboard(), getTechnicianDashboard()
+│   ├── technicians.js        # getTechnicians()
+│   └── tickets.js            # getTickets(), getTicket(), createTicket(), updateTicket(),
+│                             # updateTicketStatus(), assignTicket(), addTicketComment(),
+│                             # generateTicketSummary()
 ├── context/
 │   └── AuthContext.jsx        # AuthProvider (user, token, login, logout, loading)
 ├── hooks/
 │   └── useAuth.js             # Hook to consume AuthContext
 ├── layouts/
 │   ├── AuthLayout.jsx         # Centered layout for login
-│   ├── AdminLayout.jsx        # Sidebar + header for admin
-│   └── TechnicianLayout.jsx   # Sidebar + header for technician
+│   ├── AdminLayout.jsx        # Sidebar + header for admin (French labels)
+│   └── TechnicianLayout.jsx   # Sidebar + header for technician (French labels)
 ├── pages/
 │   ├── LoginPage.jsx
 │   ├── NotFoundPage.jsx
@@ -75,11 +78,11 @@ frontend/src/
 │   │   ├── ClientEditPage.jsx     # Form → PUT /clients/{id}
 │   │   ├── TicketsPage.jsx        # Filters + paginated table + URL sync
 │   │   ├── TicketCreatePage.jsx   # Form → POST /tickets
-│   │   └── TicketDetailPage.jsx   # PLACEHOLDER (Phase 9)
+│   │   └── TicketDetailPage.jsx   # Full detail: edit, assign, status, comments, AI
 │   └── technician/
-│       ├── DashboardPage.jsx      # PLACEHOLDER (Phase 10)
-│       ├── TicketsPage.jsx        # Filters + paginated table + URL sync
-│       └── TicketDetailPage.jsx   # PLACEHOLDER (Phase 9)
+│       ├── DashboardPage.jsx      # Stats (assigned/in_progress/resolved) + recent tickets
+│       ├── TicketsPage.jsx        # Filters + paginated table (assigned only)
+│       └── TicketDetailPage.jsx   # View-only: status transitions, comments (if assigned), AI
 ├── components/
 │   ├── ui/                        # 8 shared primitives
 │   │   ├── Alert.jsx              # success/error/info with optional close
@@ -88,19 +91,25 @@ frontend/src/
 │   │   ├── EmptyState.jsx         # Message + optional action
 │   │   ├── Input.jsx              # Label + error + aria
 │   │   ├── Modal.jsx              # Overlay + backdrop close
-│   │   ├── Pagination.jsx         # Page numbers + prev/next
+│   │   ├── Pagination.jsx         # Page numbers + prev/next (French labels)
 │   │   └── Spinner.jsx            # Centered animated spinner
 │   ├── clients/
-│   │   └── ClientForm.jsx         # Shared create/edit form
-│   └── tickets/
-│       ├── TicketFilters.jsx      # Status/priority/client/search dropdowns
-│       └── TicketForm.jsx         # Title/desc/priority/client form
+│   │   └── ClientForm.jsx         # Shared create/edit form (nom, telephone, email, adresse, entreprise)
+│   ├── tickets/
+│   │   ├── TicketFilters.jsx      # Status/priority/client/search dropdowns
+│   │   ├── TicketForm.jsx         # Title/desc/priority/client form
+│   │   ├── StatusTransitionButton.jsx  # Role-aware status transitions
+│   │   ├── CommentSection.jsx     # Comment list + add form (canComment prop)
+│   │   └── AssignTechnicianSection.jsx # Technician dropdown + assign button (admin only)
+│   └── ai/
+│       ├── AiSummaryCard.jsx      # Displays AI summary + suggested_category
+│       └── GenerateSummaryButton.jsx  # Generate / Régénérer button
 ├── router/
 │   ├── index.jsx              # All route definitions (lazy loaded)
 │   ├── ProtectedRoute.jsx     # Auth guard (waits for loading)
 │   └── RoleRoute.jsx          # Role guard (redirects wrong role)
 ├── utils/
-│   ├── ticketHelpers.js       # formatDate(), formatLabel(), parsePage()
+│   ├── ticketHelpers.js       # formatDate(), formatLabel(), parsePage(), DISPLAY_LABELS map
 │   └── formHelpers.js         # mapValidationErrors()
 ├── App.jsx                    # RouterProvider
 ├── main.jsx                   # StrictMode + AuthProvider
@@ -115,6 +124,8 @@ frontend/src/
 - **Lazy loading** on all page components with Suspense fallbacks
 - **useSearchParams** for ticket filter URL sync (survives refresh)
 - **Shared UI components** reused across all pages — no one-off styles
+- **DISPLAY_LABELS map** in ticketHelpers.js maps English enum values to French display labels
+- **English internal values, French display** — preserved throughout frontend
 
 ---
 
@@ -158,104 +169,189 @@ frontend/src/
 - Client search debounced, fetches `GET /clients?search=`
 - Submit → `POST /tickets` → redirect to list
 - 422 field-level validation errors
-- Does not send `status` or `created_by` (backend sets these)
+
+### Ticket Detail + Status + Comments + AI (Phase 9)
+
+**Admin TicketDetailPage:**
+- View full ticket: title, description, status badge, priority badge, client info, technician, timestamps
+- Edit form: title, description, priority (hidden when closed)
+- Status transition: only "Clôturer" button (resolved → closed)
+- Assign technician: dropdown + button (hidden when closed)
+- Add comment: textarea + button (admin can comment on any ticket)
+- AI summary: AiSummaryCard + generate/regenerate button
+
+**Technician TicketDetailPage:**
+- Same view layout, but no edit form and no assign section
+- Status transitions: "Démarrer" (pending → in_progress), "Résoudre" (in_progress → resolved)
+- Comment form: only visible if technician is the assigned one
+- AI summary: visible and generatable
+
+**Components created:**
+- `StatusTransitionButton` — role-aware; admin sees close button, tech sees start/resolve
+- `CommentSection` — shows comment list, form shown only if `canComment` prop is true
+- `AssignTechnicianSection` — dropdown of technicians, button to assign
+- `AiSummaryCard` — displays summary text + suggested category badge
+- `GenerateSummaryButton` — "Générer le résumé IA" / "Régénérer le résumé IA"
+
+### Technician Dashboard (Phase 10)
+- 3 stat cards: assigned_count, in_progress_count, resolved_count
+- Recent assigned tickets table with navigation to ticket detail
+- Empty state if no assigned tickets
+- Data from `GET /technician/dashboard`
+
+### Polish + Demo Readiness (Phase 11)
+- All UI text translated to French (labels, buttons, placeholders, errors, empty states)
+- `DISPLAY_LABELS` map centralizes status/priority French labels
+- `formatLabel()` reads from map, falls back to title-case
+- Admin dashboard bug fixed: `ticket.client?.name` → `ticket.client?.nom`
+- `DEMO_CHECKLIST.md` created at project root
 
 ---
 
-## 5. UI / UX State
+## 5. Backend — Key Changes and State
 
-**Design system:** Defined in `frontend/docs/DESIGN_SYSTEM.md`. Consistently applied.
+### Language / Localization
+- `config/app.php`: `locale` → `fr`, `fallback_locale` → `fr`, `faker_locale` → `fr_FR`
+- `lang/fr/validation.php`: Full French validation messages + custom field attribute names
+  - `nom`, `email` → "adresse e-mail", `telephone`, `priority` → "priorité", `status` → "statut", etc.
+- All user-facing backend messages are in French with correct accents
 
-**Visual identity:**
-- Light mode SaaS interface
-- App background: `#f5f7fb`
-- Cards: white, `rounded-2xl`, `border-[#e5e7eb]`, soft shadow
-- Primary brand: `#2563eb` (blue)
-- Text: `#111827` primary, `#6b7280` secondary, `#9ca3af` muted
-- Tables: soft row separators, hover state, uppercase small headers
-- Badges: soft tinted backgrounds per status/priority
+### Enum and Category Values
+- `AiSuggestedCategory` PHP enum: `PC`, `Imprimante`, `Réseau`, `Caméra`, `Autre`
+- `fromInput()` accepts both accented and unaccented variants (e.g., `Reseau` → `Réseau`)
+- Migration `2026_03_29_100000` normalized all stored categories to accented form
 
-**Consistency level:** High. All pages follow the same page header pattern (role label + title + description), the same card styling, the same table pattern, the same form layout (labels above inputs, submit right, cancel left). Hardcoded hex values from DESIGN_SYSTEM.md used throughout page-level code.
+### Accent Fixes Applied
+- `TicketStatusController`: "déjà", "clôturé", "assigné", "n'est pas assigné à"
+- `AiSummaryController`: "Accès interdit", "générer un résumé", "Résumé généré avec succès"
 
-**Current assessment:** Professional SaaS quality. Not generic AI-generated. Clean and spacious.
+### Demo Data (PfeDemoSeeder)
+- **Users:** Nadia El Mansouri (admin), Yassine Berrada (tech1), Salma Oujdi (tech2)
+- **Passwords:** `password123` for all
+- **Clients:** 8 realistic Moroccan companies
+- **Tickets:** 13 total — covers all statuses, priorities, categories, assignment states
+  - Statuses: 5 pending, 3 in_progress, 3 resolved, 2 closed
+  - Priorities: 2 low, 5 medium, 4 high, 2 urgent
+  - Categories: PC, Imprimante, Réseau, Caméra, Autre — all represented
+  - 13 tickets → 2 pages visible (pagination threshold is 10/page)
+  - 12 have AI summaries, 1 intentionally without (for demo)
 
 ---
 
-## 6. Code Quality
+## 6. Audit — REVIEW_ALL.md
+
+A complete project audit was performed and documented in `REVIEW_ALL.md` (project root).
+
+**Verdict:** Approved with minor fixes required
+
+**Issues found and fixed:**
+| Severity | Issue | Fix Applied |
+|----------|-------|-------------|
+| MAJOR | 3 English spinner texts ("Loading page...", "Checking your access...", "Loading your workspace...") | Translated to French |
+| MAJOR | `securiter.md` CAS 2 documented wrong behavior (claimed admin can't comment — admin actually CAN) | Rewrote CAS 2 to test unassigned technicien; added 2 new test cases; fixed French accents |
+| MINOR | Redundant role check in `ClientController::destroy()` (route already has `role:admin` middleware) | Removed dead code, fixed indentation |
+
+**Remaining minor items (not blocking, optional):**
+- Extract shared helpers (`getApiErrorMessage`, `DetailItem`) duplicated between admin/tech TicketDetailPage
+- Extract `TextareaField`, `SelectField` from admin TicketDetailPage to reusable components
+- Add automated backend tests (currently only placeholder tests exist)
+
+---
+
+## 7. EN Logic / FR Display Separation
+
+**Rule:** Internal/API values stay English. All user-facing labels are French.
+
+| Type | Internal value | Display label |
+|------|---------------|---------------|
+| Status | `pending` | En attente |
+| Status | `in_progress` | En cours |
+| Status | `resolved` | Résolu |
+| Status | `closed` | Clôturé |
+| Priority | `low` | Faible |
+| Priority | `medium` | Moyenne |
+| Priority | `high` | Haute |
+| Priority | `urgent` | Urgente |
+
+**Category values** (`Réseau`, `Caméra`, etc.) are stored as accented French in DB, displayed as-is.
+
+**Role values** (`admin`, `technicien`) remain consistent between backend and frontend.
+
+---
+
+## 8. Code Quality
 
 **Structure:** Clean. Clear separation between api, context, hooks, layouts, pages, components, router, utils.
 
-**Readability:** High. Functional components, destructured props, consistent naming (PascalCase components, camelCase functions, Page suffix on pages).
-
-**Reusability:** Good. 8 shared UI primitives reused across all pages. Domain components (ClientForm, TicketForm, TicketFilters) properly extracted.
+**Readability:** High. Functional components, destructured props, consistent naming.
 
 **Patterns consistently applied:**
 - Page state: loading → error → empty → content
 - Async actions: set loading → clear error → try/catch → finally stop loading
 - isMounted cleanup in all useEffect async calls
 - Error handling: `error.response?.data?.message || fallback`
-- 403 handled with French message
+- 403 handled with French "Vous n'avez pas accès à cette ressource"
 - Refetch after mutations (no optimistic updates)
 
-**Minor debt:**
-- Phase 3 spinners (RouteSpinner, GuardSpinner) still inline — not using Spinner component
-- Phase 4 UI components use some Tailwind named classes while pages use hardcoded hex — minor color methodology split but visually matching
+---
+
+## 9. Security Summary
+
+- Passwords: bcrypt (rounds=12)
+- Auth: Sanctum token (24h expiry), Bearer header on all requests
+- Rate limiting: login (5/min), AI summary (10/min)
+- Role enforcement: middleware (route level) + controller (business logic level)
+- No stack traces in API responses
+- No SQL injection (Eloquent ORM)
+- No XSS (React auto-escapes)
+- No mass-assignment vulnerabilities
+- CORS: configured for localhost:5173
 
 ---
 
-## 7. Issues / Risks
+## 10. Demo Accounts and Key Tickets
 
-**No critical issues.**
+**Accounts:**
+```
+Admin:  admin@pfe.test   / password123
+Tech1:  tech1@pfe.test   / password123
+Tech2:  tech2@pfe.test   / password123
+```
 
-Minor observations:
-- `TicketDetailPage.jsx` (admin + technician) are placeholders — Phase 9 will replace them
-- `technician/DashboardPage.jsx` is a placeholder — Phase 10 will replace it
-- `api/dashboard.js` only has `getAdminDashboard()` — technician dashboard function will be added in Phase 10
-- `api/tickets.js` only has `getTickets()` and `createTicket()` — Phase 9 will add `getTicket()`, `updateTicket()`, `assignTicket()`, `transitionStatus()`, `getComments()`, `addComment()`, `generateAiSummary()`
-- No `GET /technicians` API function yet — needed in Phase 9 for assignment dropdown
+**Key tickets for demo:**
+- `Wi-Fi instable au service comptabilité` — pending, unassigned (assign live)
+- `PC de caisse bloqué au démarrage` — in_progress, tech1
+- `Lenteurs sur l'application RH` — resolved (admin can close)
+- `Messagerie Outlook indisponible au service achats` — closed (full lifecycle shown)
+
+See `DEMO_CHECKLIST.md` for full 12-step demo walkthrough.
 
 ---
 
-## 8. Next Steps
+## 11. How to Start
 
-### Phase 9: Ticket Detail + Status + Comments + AI (next to implement)
+1. **Fresh database** from `backend/`:
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
 
-This is the most complex phase and the centerpiece of the MVP. It must build:
+2. **Backend** from `backend/`:
+   ```bash
+   php artisan serve
+   ```
 
-**Files to create/replace:**
-- `src/pages/admin/TicketDetailPage.jsx` — full implementation
-- `src/pages/technician/TicketDetailPage.jsx` — full implementation
-- `src/components/tickets/StatusTransitionButton.jsx`
-- `src/components/tickets/CommentSection.jsx`
-- `src/components/tickets/AssignTechnicianSection.jsx`
-- `src/components/ai/AiSummaryCard.jsx`
-- `src/components/ai/GenerateSummaryButton.jsx`
+3. **Frontend** from `frontend/`:
+   ```bash
+   npm run dev
+   ```
 
-**API functions to add to `api/tickets.js`:**
-- `getTicket(id)`
-- `updateTicket(id, data)`
-- `assignTicket(id, technicianId)`
-- `transitionStatus(id, status)`
-- `getComments(id)`
-- `addComment(id, content)`
-- `generateAiSummary(id)`
-
-**New API file needed:**
-- Add `getTechnicians()` to `api/tickets.js` or create dedicated file (for assignment dropdown)
-
-**Backend endpoints consumed:**
-- `GET /tickets/{id}`
-- `PATCH /tickets/{id}`
-- `POST /tickets/{id}/assign`
-- `POST /tickets/{id}/status`
-- `GET /tickets/{id}/comments`
-- `POST /tickets/{id}/comments`
-- `POST /tickets/{id}/ai-summary`
-- `GET /technicians`
-
-### After Phase 9
-- Phase 10: Technician Dashboard (stat cards + assigned tickets)
-- Phase 11: Polish, QA, demo readiness
+4. **Reference docs:**
+   - `frontend/docs/FRONT_PLAN.md` — phase-by-phase plan
+   - `frontend/docs/DESIGN_SYSTEM.md` — visual styling rules
+   - `backend/PRD.md` — product requirements
+   - `REVIEW_ALL.md` — final audit report
+   - `DEMO_CHECKLIST.md` — jury demo walkthrough
+   - `CLAUDE.md` — project conventions for AI assistants
 
 ---
 
@@ -270,36 +366,16 @@ This is the most complex phase and the centerpiece of the MVP. It must build:
 | GET | `/api/technician/dashboard` | Yes | technicien | Tech stats |
 | GET | `/api/technicians` | Yes | admin | Technician list |
 | GET/POST | `/api/clients` | Yes | admin | List / create |
-| GET/PATCH/DELETE | `/api/clients/{id}` | Yes | admin | Read / update / delete |
-| GET/POST | `/api/tickets` | Yes | any | List / create |
-| GET/PATCH | `/api/tickets/{id}` | Yes | any | Read / update |
+| GET/PUT/DELETE | `/api/clients/{id}` | Yes | admin | Read / update / delete |
+| GET/POST | `/api/tickets` | Yes | any | List / create (POST: admin only) |
+| GET/PATCH | `/api/tickets/{id}` | Yes | any | Read / update (PATCH: admin only) |
 | POST | `/api/tickets/{id}/assign` | Yes | admin | Assign technician |
-| POST | `/api/tickets/{id}/status` | Yes | any | Status transition |
-| GET/POST | `/api/tickets/{id}/comments` | Yes | any | List / add comment |
-| POST | `/api/tickets/{id}/ai-summary` | Yes | any | AI summary |
+| PATCH | `/api/tickets/{id}/status` | Yes | any | Status transition |
+| POST | `/api/tickets/{id}/comments` | Yes | any | Add comment |
+| POST | `/api/tickets/{id}/generate-summary` | Yes | any | AI summary |
 
-**Status flow:** `pending` -> `in_progress` -> `resolved` -> `closed`
+**Status flow:** `pending` → `in_progress` → `resolved` → `closed`
 
-**Categories:** `PC`, `Imprimante`, `Reseau`, `Camera`, `Autre`
+**Categories:** `PC`, `Imprimante`, `Réseau`, `Caméra`, `Autre`
 
 **Roles:** `admin`, `technicien`
-
----
-
-## How to Start
-
-1. **Backend** from `backend/`:
-   ```bash
-   php artisan serve
-   ```
-
-2. **Frontend** from `frontend/`:
-   ```bash
-   npm run dev
-   ```
-
-3. **Reference docs:**
-   - `frontend/docs/FRONT_PLAN.md` — phase-by-phase implementation plan
-   - `frontend/docs/DESIGN_SYSTEM.md` — visual styling rules
-   - `backend/PRD.md` — product requirements
-   - `CLAUDE.md` — project conventions for AI assistants

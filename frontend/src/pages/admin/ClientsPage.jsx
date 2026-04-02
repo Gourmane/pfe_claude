@@ -149,10 +149,10 @@ function ClientsPage() {
     <section className="space-y-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="text-sm font-medium text-[#2563eb]">Admin</p>
-          <h1 className="mt-1 text-2xl font-bold text-[#111827]">Clients</h1>
-          <p className="mt-2 text-sm text-[#6b7280]">
-            Gérez l’annuaire client utilisé dans tout le flux de support.
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
+          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">Clients</h1>
+          <p className="mt-2 text-sm text-navy-400">
+            Gérez l'annuaire client utilisé dans tout le flux de support.
           </p>
         </div>
 
@@ -161,7 +161,7 @@ function ClientsPage() {
         </Button>
       </div>
 
-      <section className="rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+      <section className="rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
         <form
           className="flex flex-col gap-4 lg:flex-row lg:items-end"
           onSubmit={handleSearchSubmit}
@@ -188,10 +188,10 @@ function ClientsPage() {
       </section>
 
       {loading ? (
-        <div className="rounded-2xl border border-[#e5e7eb] bg-white px-6 py-16 shadow-sm">
+        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
           <div className="space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm text-[#6b7280]">
+            <p className="text-center text-sm font-medium text-navy-400">
               Chargement des clients...
             </p>
           </div>
@@ -204,7 +204,7 @@ function ClientsPage() {
           message={
             searchQuery
               ? 'Aucun client ne correspond à votre recherche.'
-              : 'Aucun client n’est disponible pour le moment.'
+              : 'Aucun client n\u2019est disponible pour le moment.'
           }
           onAction={
             searchQuery
@@ -214,44 +214,44 @@ function ClientsPage() {
         />
       ) : (
         <div className="space-y-4">
-          <section className="overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white shadow-sm">
+          <section className="overflow-hidden rounded-2xl bg-surface-container-lowest shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-[#e5e7eb]">
-                <thead className="bg-[#f8fafc]">
+              <table className="min-w-full text-left">
+                <thead className="bg-surface-section">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Nom
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Téléphone
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       E-mail
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
                       Entreprise
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-[0.14em] text-[#9ca3af]">
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400 text-right">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#e5e7eb] bg-white">
+                <tbody className="divide-y divide-navy-100/50">
                   {clients.map((client) => (
                     <tr
-                      className="transition-colors duration-200 hover:bg-[#f8fafc]"
+                      className="transition-colors duration-200 hover:bg-navy-50/50"
                       key={client.id}
                     >
-                      <td className="px-6 py-4 text-sm font-medium text-[#111827]">
+                      <td className="px-6 py-4 text-sm font-semibold text-navy-800">
                         {client.nom}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
                         {client.telephone}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
                         {client.email || '--'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[#6b7280]">
+                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
                         {client.entreprise || '--'}
                       </td>
                       <td className="px-6 py-4">
@@ -291,8 +291,8 @@ function ClientsPage() {
         title="Supprimer le client"
       >
         <div className="space-y-4">
-          <p className="leading-6 text-[#6b7280]">
-            Supprimer {deleteTarget?.nom} ? Cette action est définitive.
+          <p className="leading-6 text-navy-600">
+            Supprimer <span className="font-semibold text-navy-900">{deleteTarget?.nom}</span> ? Cette action est définitive.
           </p>
 
           {deleteError ? <Alert message={deleteError} type="error" /> : null}
