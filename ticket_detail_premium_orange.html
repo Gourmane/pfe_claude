@@ -1,0 +1,248 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1B2B4B;
+    --navy-mid: #2D4070;
+    --orange: #D95F0A;
+    --orange-mid: #E8752A;
+    --orange-light: #FEF0E7;
+    --orange-pale: #FDF6F1;
+    --orange-border: #F4C9A8;
+    --ivory: #FAFAF7;
+    --ivory-2: #F4F3EE;
+    --ivory-3: #ECEAE0;
+    --text-primary: #1A202C;
+    --text-secondary: #4A5568;
+    --text-muted: #8A95A3;
+    --border: #E2DDD1;
+    --border-light: #EDE9DF;
+    --resolved-bg: #EAF6EF;
+    --resolved-text: #1E6E45;
+    --resolved-dot: #2ECC71;
+    --high-bg: #FEF3E2;
+    --high-text: #9A5000;
+    --white: #FFFFFF;
+  }
+  .page { display:flex; min-height:100vh; background:var(--ivory); font-family:'DM Sans',sans-serif; color:var(--text-primary); font-size:13.5px; }
+
+  /* Sidebar */
+  .sidebar { width:210px; min-height:100vh; background:var(--navy); display:flex; flex-direction:column; padding:28px 20px; flex-shrink:0; position:relative; }
+  .sidebar::after { content:''; position:absolute; right:0; top:0; bottom:0; width:1px; background:linear-gradient(180deg,rgba(217,95,10,0.6) 0%,rgba(217,95,10,0.08) 100%); }
+  .brand-label { font-size:10px; font-weight:600; letter-spacing:2px; color:var(--orange-mid); text-transform:uppercase; margin-bottom:5px; }
+  .brand-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .brand-icon { width:32px; height:32px; background:linear-gradient(135deg,#D95F0A 0%,#F08040 100%); border-radius:8px; display:flex; align-items:center; justify-content:center; }
+  .brand-icon svg { width:16px; height:16px; fill:#fff; }
+  .brand-name { font-family:'Playfair Display',serif; font-size:17px; font-weight:600; color:#FFFFFF; letter-spacing:-0.3px; margin-bottom:14px; }
+  .brand-tagline { font-size:11px; color:rgba(255,255,255,0.38); line-height:1.5; margin-bottom:32px; }
+  .nav-label { font-size:9.5px; font-weight:600; letter-spacing:1.8px; color:rgba(255,255,255,0.25); text-transform:uppercase; margin-bottom:10px; }
+  .nav-item { display:block; padding:9px 12px; border-radius:7px; color:rgba(255,255,255,0.55); font-size:13px; font-weight:400; cursor:pointer; text-decoration:none; margin-bottom:3px; }
+  .nav-item:hover { color:rgba(255,255,255,0.9); background:rgba(255,255,255,0.07); }
+  .nav-item.active { background:rgba(217,95,10,0.18); color:#F08040; font-weight:500; border-left:2px solid var(--orange); padding-left:10px; }
+  .session-box { margin-top:auto; border-top:1px solid rgba(255,255,255,0.08); padding-top:18px; }
+  .session-label { font-size:9.5px; letter-spacing:1.5px; color:rgba(255,255,255,0.25); text-transform:uppercase; margin-bottom:6px; }
+  .session-name { font-size:13px; color:rgba(255,255,255,0.75); font-weight:500; margin-bottom:18px; }
+  .signout-btn { display:block; width:100%; padding:8px; background:transparent; border:1px solid rgba(255,255,255,0.12); border-radius:7px; color:rgba(255,255,255,0.4); font-size:12px; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .signout-btn:hover { border-color:rgba(255,255,255,0.25); color:rgba(255,255,255,0.7); }
+
+  /* Topbar */
+  .main { flex:1; display:flex; flex-direction:column; }
+  .topbar { background:var(--white); border-bottom:1px solid var(--border-light); padding:14px 32px; display:flex; align-items:center; justify-content:space-between; }
+  .topbar-breadcrumb { font-size:10.5px; letter-spacing:1.5px; color:var(--text-muted); text-transform:uppercase; margin-bottom:2px; }
+  .topbar-name { font-size:14px; font-weight:600; color:var(--text-primary); }
+  .role-chip { display:flex; align-items:center; gap:7px; background:var(--navy); color:#fff; font-size:11px; font-weight:500; padding:5px 13px; border-radius:20px; letter-spacing:0.5px; }
+  .role-dot { width:6px; height:6px; border-radius:50%; background:var(--orange); }
+
+  /* Content */
+  .content { padding:28px 32px; flex:1; display:flex; flex-direction:column; gap:24px; }
+  .page-header { display:flex; align-items:flex-start; justify-content:space-between; }
+  .page-section-label { font-size:10px; letter-spacing:2px; font-weight:600; color:var(--orange); text-transform:uppercase; margin-bottom:4px; }
+  .page-title { font-family:'Playfair Display',serif; font-size:26px; font-weight:600; color:var(--navy); letter-spacing:-0.5px; margin-bottom:5px; }
+  .page-subtitle { font-size:12.5px; color:var(--text-muted); }
+  .back-btn { display:flex; align-items:center; gap:7px; padding:9px 18px; background:var(--white); border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); font-size:12.5px; font-weight:500; cursor:pointer; font-family:'DM Sans',sans-serif; white-space:nowrap; }
+  .back-btn:hover { border-color:var(--orange); color:var(--orange); }
+  .back-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; }
+
+  /* Columns */
+  .columns { display:grid; grid-template-columns:1fr 300px; gap:20px; }
+
+  /* Cards */
+  .card { background:var(--white); border:1px solid var(--border-light); border-radius:12px; overflow:hidden; }
+  .card-header { padding:18px 22px 14px; border-bottom:1px solid var(--border-light); display:flex; align-items:center; gap:14px; }
+  .badge-row { display:flex; gap:8px; }
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:500; letter-spacing:0.3px; }
+  .badge-dot { width:5.5px; height:5.5px; border-radius:50%; }
+  .badge.resolved { background:var(--resolved-bg); color:var(--resolved-text); }
+  .badge.resolved .badge-dot { background:var(--resolved-dot); }
+  .badge.high { background:var(--high-bg); color:var(--high-text); }
+  .badge.high .badge-dot { background:#F59E0B; }
+  .date-text { margin-left:auto; font-size:11.5px; color:var(--text-muted); }
+  .card-body { padding:20px 22px; }
+
+  .context-label { font-size:10px; letter-spacing:1.8px; color:var(--orange); text-transform:uppercase; font-weight:600; margin-bottom:8px; }
+  .context-title { font-family:'Playfair Display',serif; font-size:19px; font-weight:600; color:var(--navy); margin-bottom:5px; }
+  .context-desc { font-size:12.5px; color:var(--text-muted); margin-bottom:20px; }
+
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .info-panel { background:var(--ivory-2); border:1px solid var(--border-light); border-radius:9px; padding:14px 16px; }
+  .info-panel-title { font-size:10px; letter-spacing:1.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-bottom:12px; }
+  .info-row { margin-bottom:10px; }
+  .info-row:last-child { margin-bottom:0; }
+  .info-key { font-size:10px; letter-spacing:0.8px; color:var(--text-muted); text-transform:uppercase; margin-bottom:2px; }
+  .info-val { font-size:13px; font-weight:500; color:var(--text-primary); }
+
+  /* Side cards */
+  .side-card { background:var(--white); border:1px solid var(--border-light); border-radius:12px; padding:20px; margin-bottom:16px; }
+  .side-card:last-child { margin-bottom:0; }
+  .side-card-title { font-size:14px; font-weight:600; color:var(--navy); margin-bottom:4px; }
+  .side-card-sub { font-size:11.5px; color:var(--text-muted); margin-bottom:16px; }
+  .status-display { background:var(--ivory-2); border:1px solid var(--border-light); border-radius:8px; padding:12px 14px; }
+  .status-label { font-size:10px; letter-spacing:1.2px; color:var(--text-muted); text-transform:uppercase; margin-bottom:5px; }
+  .status-chip { display:inline-flex; align-items:center; gap:6px; background:var(--resolved-bg); color:var(--resolved-text); font-size:11.5px; font-weight:600; padding:4px 11px; border-radius:20px; }
+  .status-chip-dot { width:6px; height:6px; border-radius:50%; background:var(--resolved-dot); }
+
+  /* AI box — now orange-tinted */
+  .ai-summary-box { background:var(--orange-light); border:1px solid var(--orange-border); border-radius:8px; padding:12px 14px; font-size:12.5px; color:#7A2E00; line-height:1.5; margin-bottom:12px; }
+  .ai-cat-label { font-size:10px; letter-spacing:1.2px; color:var(--text-muted); text-transform:uppercase; margin-bottom:7px; }
+  .ai-cat-chip { display:inline-block; background:var(--ivory-3); border:1px solid var(--border); border-radius:6px; padding:3px 12px; font-size:12px; font-weight:500; color:var(--navy); }
+  .regen-btn { display:block; width:100%; margin-top:14px; padding:9px; background:var(--white); border:1px solid var(--border); border-radius:8px; color:var(--text-secondary); font-size:12.5px; font-weight:500; cursor:pointer; text-align:center; font-family:'DM Sans',sans-serif; }
+  .regen-btn:hover { border-color:var(--orange); color:var(--orange); }
+
+  /* History */
+  .history-title { font-size:15px; font-weight:600; color:var(--navy); margin-bottom:3px; }
+  .history-sub { font-size:11.5px; color:var(--text-muted); margin-bottom:16px; }
+  .comment-item { border:1px solid var(--border-light); border-radius:9px; padding:13px 16px; margin-bottom:10px; background:var(--ivory-2); }
+  .comment-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+  .comment-author { font-size:12.5px; font-weight:600; color:var(--navy); }
+  .comment-date { font-size:11px; color:var(--text-muted); letter-spacing:0.5px; }
+  .comment-text { font-size:13px; color:var(--text-secondary); }
+  .add-comment-label { font-size:10px; letter-spacing:1.5px; color:var(--orange); text-transform:uppercase; font-weight:600; margin-bottom:10px; }
+  .comment-textarea { width:100%; min-height:90px; border:1px solid var(--border); border-radius:9px; padding:12px 14px; font-family:'DM Sans',sans-serif; font-size:13px; color:var(--text-primary); background:var(--white); resize:vertical; outline:none; }
+  .comment-textarea:focus { border-color:var(--orange); }
+  .comment-textarea::placeholder { color:var(--text-muted); }
+  .submit-btn { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; margin-left:auto; padding:10px 24px; background:var(--orange); color:var(--white); border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; }
+  .submit-btn:hover { background:#C04F00; }
+</style>
+
+<div class="page">
+  <aside class="sidebar">
+    <div class="brand-label">Technicien</div>
+    <div class="brand-row">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <span class="brand-name">Precision IT</span>
+    </div>
+    <p class="brand-tagline">Suivez vos interventions, l'activité des tickets et les priorités en cours.</p>
+    <div class="nav-label">Navigation</div>
+    <a class="nav-item" href="#">Tableau de bord</a>
+    <a class="nav-item active" href="#">Mes tickets</a>
+    <div class="session-box">
+      <div class="session-label">Session</div>
+      <div class="session-name">Yassine Berrada</div>
+      <button class="signout-btn">Se déconnecter</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-breadcrumb">Espace Technicien</div>
+        <div class="topbar-name">Yassine Berrada</div>
+      </div>
+      <div class="role-chip"><span class="role-dot"></span>TECH</div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <div class="page-section-label">Technicien</div>
+          <div class="page-title">Ticket #15</div>
+          <div class="page-subtitle">Reprenez le contexte, documentez le suivi et faites avancer le ticket sans perdre le fil de l'intervention.</div>
+        </div>
+        <button class="back-btn">
+          <svg viewBox="0 0 24 24" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          Retour à la liste
+        </button>
+      </div>
+
+      <div class="columns">
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="badge-row">
+                <span class="badge resolved"><span class="badge-dot"></span>Résolue</span>
+                <span class="badge high"><span class="badge-dot"></span>Haute</span>
+              </div>
+              <span class="date-text">Créé le 01 avr. 2026</span>
+            </div>
+            <div class="card-body">
+              <div class="context-label">Contexte</div>
+              <div class="context-title">Pagination test 02</div>
+              <div class="context-desc">Ticket supplémentaire pour vérifier la pagination de la liste.</div>
+              <div class="info-grid">
+                <div class="info-panel">
+                  <div class="info-panel-title">Vue d'ensemble</div>
+                  <div class="info-row"><div class="info-key">Client</div><div class="info-val">Sara El Idrissi</div></div>
+                  <div class="info-row"><div class="info-key">Technicien</div><div class="info-val">Yassine Berrada</div></div>
+                  <div class="info-row"><div class="info-key">Créé par</div><div class="info-val">Nadia El Mansouri</div></div>
+                  <div class="info-row"><div class="info-key">Résolue le</div><div class="info-val">02 avr. 2026</div></div>
+                  <div class="info-row"><div class="info-key">Clôturée le</div><div class="info-val" style="color:var(--text-muted)">—</div></div>
+                </div>
+                <div class="info-panel">
+                  <div class="info-panel-title">Coordonnées client</div>
+                  <div class="info-row"><div class="info-key">Nom</div><div class="info-val">Sara El Idrissi</div></div>
+                  <div class="info-row"><div class="info-key">E-mail</div><div class="info-val" style="color:var(--navy-mid);font-size:12px;">s.elidrissi@novacare.ma</div></div>
+                  <div class="info-row"><div class="info-key">Téléphone</div><div class="info-val">0661234502</div></div>
+                  <div class="info-row"><div class="info-key">Entreprise</div><div class="info-val">NovaCare Services</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:16px;">
+            <div class="card-body">
+              <div class="history-title">Historique et commentaires</div>
+              <div class="history-sub">Gardez la trace des actions et des décisions prises sur ce ticket.</div>
+              <div class="comment-item">
+                <div class="comment-top"><span class="comment-author">Yassine Berrada</span><span class="comment-date">02 AVR. 2026</span></div>
+                <div class="comment-text">commentaire 1</div>
+              </div>
+              <div class="comment-item">
+                <div class="comment-top"><span class="comment-author">Yassine Berrada</span><span class="comment-date">03 AVR. 2026</span></div>
+                <div class="comment-text">ffbfgdhfgh</div>
+              </div>
+              <div style="margin-top:20px;">
+                <div class="add-comment-label">Ajouter un commentaire</div>
+                <textarea class="comment-textarea" placeholder="Documentez l'action, le diagnostic ou la prochaine étape."></textarea>
+                <div style="display:flex;justify-content:flex-end;">
+                  <button class="submit-btn">Ajouter un commentaire</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="side-card">
+            <div class="side-card-title">Flux de traitement</div>
+            <div class="side-card-sub">Faites avancer le ticket selon son statut actuel.</div>
+            <div class="status-display">
+              <div class="status-label">Statut actuel</div>
+              <div class="status-chip"><span class="status-chip-dot"></span>Résolue</div>
+            </div>
+          </div>
+          <div class="side-card">
+            <div class="side-card-title">Résumé IA</div>
+            <div class="side-card-sub">Vue condensée pour accélérer la reprise de contexte.</div>
+            <div class="ai-summary-box">Vérification pagination liste</div>
+            <div class="ai-cat-label">Catégorie suggérée</div>
+            <span class="ai-cat-chip">PC</span>
+            <button class="regen-btn">↻ &nbsp;Générer à nouveau le résumé IA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { getClients } from '../../api/clients'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { getClient, getClients } from '../../api/clients'
 import { getTickets } from '../../api/tickets'
 import TicketFilters from '../../components/tickets/TicketFilters'
 import Alert from '../../components/ui/Alert'
@@ -9,34 +9,119 @@ import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
 import Pagination from '../../components/ui/Pagination'
 import Spinner from '../../components/ui/Spinner'
-import {
-  formatDate,
-  formatLabel,
-  parsePage,
-} from '../../utils/ticketHelpers'
+import { withSearch } from '../../utils/routeHelpers'
+import { formatDate, formatLabel, parsePage } from '../../utils/ticketHelpers'
 
-const FALLBACK_ERROR_MESSAGE = 'Une erreur est survenue.'
+const FALLBACK_ERROR_MESSAGE = 'Impossible de charger la liste des tickets.'
+
+function TicketListCard({ onOpen, ticket }) {
+  return (
+    <article className="app-panel p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="line-clamp-2 text-sm font-semibold text-navy-900">
+            {ticket.title || '--'}
+          </p>
+          <p className="mt-1 text-xs font-medium text-navy-400">#{ticket.id}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
+          <Badge variant={ticket.priority}>{formatLabel(ticket.priority)}</Badge>
+        </div>
+      </div>
+
+      <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+            Client
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-navy-700">
+            {ticket.client?.nom || '--'}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+            Technicien
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-navy-700">
+            {ticket.technician?.name || '--'}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+            Date
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-navy-700">
+            {formatDate(ticket.created_at)}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-4">
+        <Button onClick={() => onOpen(ticket.id)} size="sm" variant="secondary">
+          Ouvrir le ticket
+        </Button>
+      </div>
+    </article>
+  )
+}
 
 function TicketsPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [ticketsPage, setTicketsPage] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [clients, setClients] = useState([])
   const [clientsLoading, setClientsLoading] = useState(true)
   const [clientsError, setClientsError] = useState('')
+  const [keyboardFocusIndex, setKeyboardFocusIndex] = useState(-1)
   const status = searchParams.get('status') ?? ''
   const priority = searchParams.get('priority') ?? ''
   const clientId = searchParams.get('client_id') ?? ''
   const search = searchParams.get('search') ?? ''
   const page = parsePage(searchParams.get('page'))
   const [searchInput, setSearchInput] = useState(search)
+  const [clientSearchInput, setClientSearchInput] = useState('')
+  const [debouncedClientSearch, setDebouncedClientSearch] = useState('')
   const searchParamsKey = searchParams.toString()
+  const hasActiveFilters = Boolean(status || priority || clientId || search)
+  const listSearch = location.search
+  const detailState = listSearch ? { fromSearch: listSearch } : undefined
+  const activeFilterLabels = [
+    status && 'Statut',
+    priority && 'Priorite',
+    clientId && 'Client',
+    search && 'Recherche',
+  ].filter(Boolean)
+
+  useEffect(() => {
+    if (!location.state?.successMessage) {
+      return
+    }
+
+    setSuccessMessage(location.state.successMessage)
+    navigate(withSearch(location.pathname, location.search), {
+      replace: true,
+      state: null,
+    })
+  }, [location.pathname, location.search, location.state, navigate])
 
   useEffect(() => {
     setSearchInput(search)
   }, [search])
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedClientSearch(clientSearchInput.trim())
+    }, 250)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [clientSearchInput])
 
   useEffect(() => {
     let isMounted = true
@@ -46,39 +131,40 @@ function TicketsPage() {
       setClientsError('')
 
       try {
-        const firstResponse = await getClients()
-        const firstPage = firstResponse.data
-        const firstClients = Array.isArray(firstPage?.data) ? firstPage.data : []
-        const lastPage = firstPage?.last_page ?? 1
-        let allClients = firstClients
+        const clientsResponse = await getClients(
+          debouncedClientSearch ? { search: debouncedClientSearch } : {},
+        )
+        const firstClients = Array.isArray(clientsResponse?.data?.data)
+          ? clientsResponse.data.data
+          : []
+        let nextClients = firstClients
 
-        if (lastPage > 1) {
-          const remainingResponses = await Promise.all(
-            Array.from({ length: lastPage - 1 }, (_, index) =>
-              getClients({ page: index + 2 }),
-            ),
-          )
+        if (clientId && !firstClients.some((client) => String(client.id) === clientId)) {
+          try {
+            const selectedClientResponse = await getClient(clientId)
+            const selectedClient = selectedClientResponse?.data
 
-          allClients = [
-            ...firstClients,
-            ...remainingResponses.flatMap(
-              (response) => response.data?.data ?? [],
-            ),
-          ]
+            if (selectedClient) {
+              nextClients = [selectedClient, ...firstClients]
+            }
+          } catch {
+            nextClients = firstClients
+          }
         }
 
         if (!isMounted) {
           return
         }
 
-        setClients(allClients)
+        setClients(nextClients)
       } catch (requestError) {
         if (!isMounted) {
           return
         }
 
         setClientsError(
-          requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
+          requestError.response?.data?.message ||
+            'Impossible de charger la liste des clients.',
         )
       } finally {
         if (isMounted) {
@@ -92,7 +178,7 @@ function TicketsPage() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [clientId, debouncedClientSearch])
 
   useEffect(() => {
     let isMounted = true
@@ -121,7 +207,7 @@ function TicketsPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource.")
+          setError("Vous n'avez pas acces a cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -165,6 +251,54 @@ function TicketsPage() {
     }
   }, [search, searchInput, searchParamsKey, setSearchParams])
 
+  const tickets = ticketsPage?.data ?? []
+  const totalTickets = ticketsPage?.total ?? tickets.length
+
+  const tableRef = useRef(null)
+
+  useEffect(() => {
+    setKeyboardFocusIndex(-1)
+  }, [searchParamsKey])
+
+  useEffect(() => {
+    if (keyboardFocusIndex < 0 || !tableRef.current) {
+      return undefined
+    }
+
+    const row = tableRef.current.querySelector(`[data-row-index="${keyboardFocusIndex}"]`)
+    if (row) {
+      row.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [keyboardFocusIndex])
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      const tag = event.target?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') {
+        return
+      }
+
+      if (event.key === 'j' || event.key === 'ArrowDown') {
+        event.preventDefault()
+        setKeyboardFocusIndex((prev) => Math.min(prev + 1, tickets.length - 1))
+      } else if (event.key === 'k' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        setKeyboardFocusIndex((prev) => Math.max(prev - 1, 0))
+      } else if (event.key === 'Enter' && keyboardFocusIndex >= 0 && tickets[keyboardFocusIndex]) {
+        event.preventDefault()
+        handleRowNavigation(tickets[keyboardFocusIndex].id)
+      } else if (event.key === 'Escape') {
+        setKeyboardFocusIndex(-1)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [tickets, keyboardFocusIndex])
+
   function updateSearchParams(updates, { resetPage = false } = {}) {
     const nextParams = new URLSearchParams(searchParamsKey)
 
@@ -196,51 +330,89 @@ function TicketsPage() {
 
   function handleResetFilters() {
     setSearchInput('')
+    setClientSearchInput('')
     setSearchParams({})
   }
 
   function handleRowNavigation(ticketId) {
-    navigate(`/admin/tickets/${ticketId}`)
+    navigate(`/admin/tickets/${ticketId}`, { state: detailState })
   }
-
-  const tickets = ticketsPage?.data ?? []
-  const hasActiveFilters = Boolean(status || priority || clientId || search)
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">Tickets</h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Consultez, filtrez et pilotez les demandes de support de tous les
-            clients.
+          <p className="app-page-header-kicker">Admin</p>
+          <h1 className="app-page-title">Tickets</h1>
+          <p className="app-page-copy">
+            Triagez rapidement la file, ouvrez les détails utiles et gardez la
+            prochaine action visible sur chaque ticket.
           </p>
         </div>
 
-        <Button onClick={() => navigate('/admin/tickets/new')} type="button">
+        <Button
+          onClick={() => navigate('/admin/tickets/new', { state: detailState })}
+          type="button"
+        >
           Nouveau ticket
         </Button>
       </div>
 
+      {successMessage ? (
+        <Alert
+          message={successMessage}
+          onClose={() => setSuccessMessage('')}
+          type="success"
+        />
+      ) : null}
       {clientsError ? <Alert message={clientsError} type="error" /> : null}
 
       <TicketFilters
         clients={clients}
         clientsLoading={clientsLoading}
+        clientSearchValue={clientSearchInput}
         filters={{
           clientId,
           priority,
           status,
         }}
+        hasActiveFilters={hasActiveFilters}
+        onClientSearchChange={setClientSearchInput}
         onFilterChange={handleFilterChange}
+        onReset={handleResetFilters}
         onSearchChange={setSearchInput}
         searchValue={searchInput}
         variant="admin"
       />
 
+      <section className="app-panel flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-navy-400">
+            Resultats
+          </p>
+          <p className="mt-1 text-sm text-navy-500">
+            {totalTickets} ticket(s) dans la file courante.
+          </p>
+          <p className="mt-1 hidden text-[10px] text-navy-400 xl:block">
+            ↑↓ · j/k pour naviguer &middot; Entrée pour ouvrir
+          </p>
+        </div>
+        {hasActiveFilters ? (
+          <div className="flex flex-wrap gap-2">
+            {activeFilterLabels.map((label) => (
+              <span
+                className="inline-flex items-center rounded-full border border-navy-100 bg-surface px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-navy-500"
+                key={label}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
       {loading ? (
-        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+        <div className="app-panel px-6 py-16">
           <div className="space-y-3">
             <Spinner size="lg" />
             <p className="text-center text-sm font-medium text-navy-400">
@@ -253,83 +425,129 @@ function TicketsPage() {
       ) : tickets.length === 0 ? (
         <EmptyState
           action={hasActiveFilters ? 'Réinitialiser les filtres' : undefined}
+          hint={
+            hasActiveFilters
+              ? 'Élargissez les filtres pour retrouver des tickets.'
+              : 'Créez un ticket pour lancer une nouvelle prise en charge.'
+          }
           message={
             hasActiveFilters
               ? 'Aucun ticket ne correspond aux filtres actuels.'
-              : 'Aucun ticket n\u2019est disponible pour le moment.'
+              : "Aucun ticket n'est disponible pour le moment."
           }
           onAction={hasActiveFilters ? handleResetFilters : undefined}
         />
       ) : (
         <div className="space-y-4">
-          <section className="overflow-hidden rounded-2xl bg-surface-container-lowest shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-            <div className="overflow-x-auto">
+          <div className="grid gap-4 md:grid-cols-2 xl:hidden">
+            {tickets.map((ticket) => (
+              <TicketListCard
+                key={ticket.id}
+                onOpen={handleRowNavigation}
+                ticket={ticket}
+              />
+            ))}
+          </div>
+
+          <section className="app-table-shell hidden xl:block">
+            <div ref={tableRef} className="overflow-x-auto">
               <table className="min-w-full text-left">
-                <thead className="bg-surface-section">
+                <caption className="sr-only">
+                  Liste des tickets avec client, technicien, statut, priorite et date.
+                </caption>
+                <thead className="bg-surface">
                   <tr>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Titre
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Client
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Technicien
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Statut
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
-                      Priorité
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+                      Priorite
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Date
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-navy-100/50">
-                  {tickets.map((ticket) => (
+                <tbody className="divide-y divide-navy-100 bg-white">
+                  {tickets.map((ticket, index) => (
                     <tr
-                      className="cursor-pointer transition-colors duration-200 hover:bg-navy-50/50"
+                      className={[
+                        'group cursor-pointer transition-colors focus-within:bg-surface',
+                        keyboardFocusIndex === index
+                          ? 'bg-primary/5 ring-2 ring-inset ring-primary/20'
+                          : 'hover:bg-surface',
+                      ].join(' ')}
+                      data-row-index={index}
                       key={ticket.id}
                       onClick={() => handleRowNavigation(ticket.id)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault()
-                          handleRowNavigation(ticket.id)
-                        }
-                      }}
-                      role="link"
-                      tabIndex={0}
                     >
-                      <td className="px-6 py-4 align-top">
-                        <div>
-                          <p className="text-sm font-semibold text-navy-800">
+                      <td className="px-5 py-4 align-top">
+                        <button
+                          className="block rounded text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-200"
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            handleRowNavigation(ticket.id)
+                          }}
+                          type="button"
+                        >
+                          <p
+                            className="line-clamp-2 max-w-sm text-sm font-semibold text-navy-900"
+                            title={ticket.title || ''}
+                          >
                             {ticket.title || '--'}
                           </p>
                           <p className="mt-1 text-xs font-medium text-navy-400">
                             #{ticket.id}
                           </p>
-                        </div>
+                        </button>
                       </td>
-                      <td className="px-6 py-4 align-top text-sm font-medium text-navy-600">
-                        {ticket.client?.nom || '--'}
+                      <td className="px-5 py-4 align-top">
+                        <span
+                          className="block max-w-[180px] truncate text-sm font-medium text-navy-700"
+                          title={ticket.client?.nom || ''}
+                        >
+                          {ticket.client?.nom || '--'}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 align-top text-sm font-medium text-navy-600">
-                        {ticket.technician?.name || '--'}
+                      <td className="px-5 py-4 align-top">
+                        <span
+                          className="block max-w-[180px] truncate text-sm font-medium text-navy-700"
+                          title={ticket.technician?.name || ''}
+                        >
+                          {ticket.technician?.name || '--'}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 align-top">
+                      <td className="px-5 py-4 align-top">
                         <Badge variant={ticket.status}>
                           {formatLabel(ticket.status)}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 align-top">
+                      <td className="px-5 py-4 align-top">
                         <Badge variant={ticket.priority}>
                           {formatLabel(ticket.priority)}
                         </Badge>
                       </td>
-                      <td className="px-6 py-4 align-top text-sm text-navy-400">
-                        {formatDate(ticket.created_at)}
+                      <td className="px-5 py-4 align-top">
+                        <div className="flex flex-col items-end gap-1">
+                          <span className="text-sm text-navy-500">
+                            {formatDate(ticket.created_at)}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-primary opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+                            Voir
+                            <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                          </span>
+                        </div>
                       </td>
                     </tr>
                   ))}

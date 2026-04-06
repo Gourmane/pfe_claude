@@ -3,6 +3,7 @@ import { formatDate } from '../../utils/ticketHelpers'
 import Alert from '../ui/Alert'
 import Button from '../ui/Button'
 import EmptyState from '../ui/EmptyState'
+import Textarea from '../ui/Textarea'
 
 function getAuthorLabel(comment) {
   return comment?.user?.name || comment?.user?.email || 'Utilisateur'
@@ -13,13 +14,13 @@ function CommentSection({
   canComment,
   loading = false,
   error = '',
+  successMessage = '',
   onSubmit,
 }) {
   const [comment, setComment] = useState('')
 
   async function handleSubmit(event) {
     event.preventDefault()
-
     const trimmedComment = comment.trim()
 
     if (!trimmedComment || loading) {
@@ -34,70 +35,62 @@ function CommentSection({
   }
 
   return (
-    <section className="space-y-6 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-      <div>
-        <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">Commentaires</h2>
-        <p className="mt-1 text-sm text-navy-400">
-          Suivez l'historique du ticket et ajoutez des notes de suivi.
-        </p>
-      </div>
+    <div className="flex flex-col">
+      <div className="flex flex-col gap-3">
+        {successMessage ? <Alert message={successMessage} type="success" /> : null}
+        {error ? <Alert message={error} type="error" /> : null}
 
-      {error ? <Alert message={error} type="error" /> : null}
-
-      {comments.length === 0 ? (
-        <EmptyState message="Aucun commentaire n'a encore été ajouté à ce ticket." />
-      ) : (
-        <div className="space-y-4">
-          {comments.map((entry) => (
-            <article
-              className="rounded-2xl bg-primary-container/30 p-4"
+        {comments.length === 0 ? (
+          <EmptyState
+            hint="Ajoutez une premiere note de suivi pour documenter la prise en charge."
+            message="Aucun commentaire n'a encore ete ajoute a ce ticket."
+          />
+        ) : (
+          comments.map((entry) => (
+            <div
+              className="app-panel-soft rounded-[10px] p-[13px_16px]"
               key={entry.id}
             >
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm font-semibold text-navy-900">
+              <div className="mb-[7px] flex flex-col gap-1.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+                <span className="min-w-0 break-words text-[12.5px] font-semibold text-navy">
                   {getAuthorLabel(entry)}
-                </p>
-                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                </span>
+                <span className="text-[11px] font-medium tracking-[0.5px] text-text-muted uppercase sm:shrink-0">
                   {formatDate(entry.created_at)}
-                </p>
+                </span>
               </div>
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-navy-600">
+              <div className="break-words text-[13px] text-text-secondary whitespace-pre-wrap">
                 {entry.comment}
-              </p>
-            </article>
-          ))}
-        </div>
-      )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
 
       {canComment ? (
-        <form
-          className="space-y-4 pt-6 mt-6"
-          onSubmit={handleSubmit}
-        >
-          <div className="space-y-1.5">
-            <label
-              className="block text-[10px] font-bold uppercase tracking-wider text-navy-400"
-              htmlFor="ticket-comment"
-            >
-              Ajouter un commentaire
-            </label>
-            <textarea
-              className="min-h-32 w-full rounded-xl bg-surface-section px-3.5 py-3 text-sm text-navy-900 border border-transparent outline-none transition-all focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100"
-              id="ticket-comment"
-              onChange={(event) => setComment(event.target.value)}
-              placeholder="Saisissez une mise à jour claire pour l'équipe."
-              value={comment}
-            />
-          </div>
+        <form className="mt-[20px]" onSubmit={handleSubmit}>
+          <Textarea
+            disabled={loading}
+            label="Ajouter un commentaire"
+            name="comment"
+            onChange={(event) => setComment(event.target.value)}
+            placeholder="Documentez l'action, le diagnostic ou la prochaine etape."
+            value={comment}
+          />
 
-          <div className="flex justify-end">
-            <Button disabled={!comment.trim()} loading={loading} type="submit">
+          <div className="mt-[12px] flex justify-end">
+            <Button
+              className="sm:w-auto"
+              disabled={!comment.trim() || loading}
+              loading={loading}
+              type="submit"
+            >
               Ajouter un commentaire
             </Button>
           </div>
         </form>
       ) : null}
-    </section>
+    </div>
   )
 }
 

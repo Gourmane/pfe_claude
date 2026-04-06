@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getTechnicians } from '../../api/technicians'
 import {
   addTicketComment,
@@ -13,14 +13,22 @@ import AiSummaryCard from '../../components/ai/AiSummaryCard'
 import GenerateSummaryButton from '../../components/ai/GenerateSummaryButton'
 import AssignTechnicianSection from '../../components/tickets/AssignTechnicianSection'
 import CommentSection from '../../components/tickets/CommentSection'
+import TicketDetailHero from '../../components/tickets/TicketDetailHero'
+import {
+  TicketDetailFieldGroup,
+  TicketDetailFieldItem,
+} from '../../components/tickets/TicketDetailFields'
 import StatusTransitionButton from '../../components/tickets/StatusTransitionButton'
 import Alert from '../../components/ui/Alert'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import EmptyState from '../../components/ui/EmptyState'
 import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
 import Spinner from '../../components/ui/Spinner'
+import Textarea from '../../components/ui/Textarea'
 import { mapValidationErrors } from '../../utils/formHelpers'
+import { withSearch } from '../../utils/routeHelpers'
 import { formatDate, formatLabel } from '../../utils/ticketHelpers'
 
 const FALLBACK_ERROR_MESSAGE = 'Une erreur est survenue.'
@@ -52,99 +60,9 @@ function getTicketSummary(ticket) {
   return ticket?.ai_summary ?? ticket?.aiSummary ?? null
 }
 
-function TextareaField({ error, id, label, name, onChange, required, value }) {
-  const errorId = error ? `${id}-error` : undefined
-
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
-        {label}
-      </label>
-      <textarea
-        aria-describedby={errorId}
-        aria-invalid={error ? 'true' : 'false'}
-        className={[
-          'min-h-36 w-full rounded-xl bg-surface-section px-3.5 py-3 text-sm text-navy-900 border border-transparent outline-none transition-all',
-          error
-            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
-            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
-        ].join(' ')}
-        id={id}
-        name={name}
-        onChange={onChange}
-        required={required}
-        value={value}
-      />
-      {error ? (
-        <p className="text-sm text-red-600" id={errorId}>
-          {error}
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function SelectField({
-  error,
-  id,
-  label,
-  name,
-  onChange,
-  options,
-  required,
-  value,
-}) {
-  const errorId = error ? `${id}-error` : undefined
-
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
-        {label}
-      </label>
-      <select
-        aria-describedby={errorId}
-        aria-invalid={error ? 'true' : 'false'}
-        className={[
-          'h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all',
-          error
-            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
-            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
-        ].join(' ')}
-        id={id}
-        name={name}
-        onChange={onChange}
-        required={required}
-        value={value}
-      >
-        <option value="">Sélectionner une priorité</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {error ? (
-        <p className="text-sm text-red-600" id={errorId}>
-          {error}
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function DetailItem({ label, value }) {
-  return (
-    <div>
-      <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
-        {label}
-      </p>
-      <p className="mt-1.5 text-sm font-medium text-navy-900">{value || '--'}</p>
-    </div>
-  )
-}
-
 function TicketDetailPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { ticketId } = useParams()
   const [ticket, setTicket] = useState(null)
   const [technicians, setTechnicians] = useState([])
@@ -164,6 +82,8 @@ function TicketDetailPage() {
   const [commentLoading, setCommentLoading] = useState(false)
   const [summaryError, setSummaryError] = useState('')
   const [summaryLoading, setSummaryLoading] = useState(false)
+
+  const backTarget = withSearch('/admin/tickets', location.state?.fromSearch || '')
 
   useEffect(() => {
     let isMounted = true
@@ -337,24 +257,24 @@ function TicketDetailPage() {
     }
   }
 
+  const header = (
+    <TicketDetailHero
+      backTarget={backTarget}
+      description="Centralisez le contexte utile, l'assignation et la prochaine action sans perdre le fil de l'intervention."
+      onBack={navigate}
+      roleLabel="Administrateur"
+      ticket={ticket}
+    />
+  )
+
   if (loading) {
     return (
-      <section className="space-y-6">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-            Détail du ticket
-          </h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Consultez la demande, gérez l'assignation et faites avancer le
-            traitement.
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-          <div className="space-y-3">
+      <section className="space-y-[24px]">
+        {header}
+        <div className="app-panel p-6 py-16">
+          <div className="flex flex-col items-center space-y-3">
             <Spinner size="lg" />
-            <p className="text-center text-sm font-medium text-navy-400">
+            <p className="text-center text-[12.5px] font-medium text-text-muted">
               Chargement du ticket...
             </p>
           </div>
@@ -365,23 +285,8 @@ function TicketDetailPage() {
 
   if (error) {
     return (
-      <section className="space-y-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
-            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-              Détail du ticket
-            </h1>
-            <p className="mt-2 text-sm text-navy-400">
-              Consultez la demande, gérez l'assignation et faites avancer le
-              traitement.
-            </p>
-          </div>
-          <Button onClick={() => navigate('/admin/tickets')} variant="secondary">
-            Retour aux tickets
-          </Button>
-        </div>
-
+      <section className="space-y-[24px]">
+        {header}
         <Alert message={error} type="error" />
       </section>
     )
@@ -389,23 +294,8 @@ function TicketDetailPage() {
 
   if (!ticket) {
     return (
-      <section className="space-y-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
-            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-              Détail du ticket
-            </h1>
-            <p className="mt-2 text-sm text-navy-400">
-              Consultez la demande, gérez l'assignation et faites avancer le
-              traitement.
-            </p>
-          </div>
-          <Button onClick={() => navigate('/admin/tickets')} variant="secondary">
-            Retour aux tickets
-          </Button>
-        </div>
-
+      <section className="space-y-[24px]">
+        {header}
         <EmptyState message="Ce ticket est introuvable." />
       </section>
     )
@@ -416,219 +306,208 @@ function TicketDetailPage() {
   const isClosed = ticket.status === 'closed'
 
   return (
-    <section className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Administrateur</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-            Détail du ticket
-          </h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Consultez la demande, gérez l'assignation et faites avancer le
-            traitement.
-          </p>
-        </div>
+    <section className="flex flex-col gap-[24px]">
+      {header}
 
-        <Button onClick={() => navigate('/admin/tickets')} variant="secondary">
-          Retour aux tickets
-        </Button>
-      </div>
+      <div className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="flex min-w-0 flex-col gap-[16px]">
+          <div className="app-panel app-ticket-primary-panel overflow-hidden">
+            <div className="p-5 sm:p-[20px_22px]">
+              {isEditing ? (
+                <form className="space-y-5" onSubmit={handleSaveEdit}>
+                  {editError ? <Alert message={editError} type="error" /> : null}
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]">
-        <div className="space-y-6">
-          <section className="rounded-2xl bg-surface-container-lowest p-6 lg:p-8 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-            <div className="flex flex-col gap-4 pb-6 sm:flex-row sm:items-start sm:justify-between">
-              <div>
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
-                  <Badge variant={ticket.priority}>
-                    {formatLabel(ticket.priority)}
-                  </Badge>
-                </div>
-                <p className="mt-3 text-sm font-medium text-navy-400">
-                  Créé le {formatDate(ticket.created_at)}
-                </p>
-              </div>
+                  <Input
+                    error={editFieldErrors.title}
+                    label="Titre"
+                    name="title"
+                    onChange={handleEditChange}
+                    required
+                    value={editValues.title}
+                  />
 
-              {!isClosed && !isEditing ? (
-                <Button onClick={handleStartEditing} variant="secondary">
-                  Modifier le ticket
-                </Button>
-              ) : null}
-            </div>
+                  <Textarea
+                    error={editFieldErrors.description}
+                    label="Description"
+                    name="description"
+                    onChange={handleEditChange}
+                    required
+                    value={editValues.description}
+                  />
 
-            {isEditing ? (
-              <form className="space-y-5 pt-6" onSubmit={handleSaveEdit}>
-                {editError ? <Alert message={editError} type="error" /> : null}
+                  <Select
+                    error={editFieldErrors.priority}
+                    label="Priorité"
+                    name="priority"
+                    onChange={handleEditChange}
+                    options={[
+                      { label: 'Sélectionner une priorité', value: '' },
+                      ...PRIORITY_OPTIONS,
+                    ]}
+                    required
+                    value={editValues.priority}
+                  />
 
-                <Input
-                  error={editFieldErrors.title}
-                  label="Titre"
-                  name="title"
-                  onChange={handleEditChange}
-                  required
-                  value={editValues.title}
-                />
-
-                <TextareaField
-                  error={editFieldErrors.description}
-                  id="description"
-                  label="Description"
-                  name="description"
-                  onChange={handleEditChange}
-                  required
-                  value={editValues.description}
-                />
-
-                <SelectField
-                  error={editFieldErrors.priority}
-                  id="priority"
-                  label="Priorité"
-                  name="priority"
-                  onChange={handleEditChange}
-                  options={PRIORITY_OPTIONS}
-                  required
-                  value={editValues.priority}
-                />
-
-                <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
-                  <Button
-                    onClick={handleCancelEditing}
-                    type="button"
-                    variant="secondary"
-                  >
-                    Annuler
-                  </Button>
-                  <Button loading={editLoading} type="submit">
-                    Enregistrer les modifications
-                  </Button>
-                </div>
-              </form>
-            ) : (
-              <div className="space-y-6 pt-6">
-                <div>
-                  <h2 className="font-display text-xl font-bold tracking-tight text-navy-900">
-                    {ticket.title || '--'}
-                  </h2>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-navy-500">
+                  <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                    <Button onClick={handleCancelEditing} type="button" variant="secondary">
+                      Annuler
+                    </Button>
+                    <Button
+                      className="sm:w-auto"
+                      loading={editLoading}
+                      type="submit"
+                    >
+                      Enregistrer les modifications
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="app-panel-kicker mb-[8px] text-primary">
+                        Contexte
+                      </div>
+                      <div className="mb-[6px] break-words font-display text-[1.6rem] font-bold tracking-[-0.03em] text-navy">
+                        {ticket.title || '--'}
+                      </div>
+                    </div>
+                    {!isClosed ? (
+                      <Button
+                        className="sm:w-auto"
+                        onClick={handleStartEditing}
+                        size="sm"
+                        type="button"
+                        variant="secondary"
+                      >
+                        Modifier
+                      </Button>
+                    ) : null}
+                  </div>
+                  <div className="app-ticket-prose mb-[22px] whitespace-pre-wrap break-words">
                     {ticket.description || '--'}
-                  </p>
-                </div>
+                  </div>
 
-                <div className="grid gap-5 md:grid-cols-2">
-                  <section className="space-y-4 rounded-2xl bg-surface p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-orange-50 rounded-lg">
-                        <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                        </svg>
-                      </div>
-                      <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
-                        Informations du client
-                      </h3>
-                    </div>
-                    <DetailItem label="Nom" value={ticket.client?.nom} />
-                    <DetailItem label="E-mail" value={ticket.client?.email} />
-                    <DetailItem
-                      label="Téléphone"
-                      value={ticket.client?.telephone}
-                    />
-                    <DetailItem
-                      label="Entreprise"
-                      value={ticket.client?.entreprise}
-                    />
-                  </section>
+                  <div className="grid grid-cols-1 gap-[16px] lg:grid-cols-2">
+                    <TicketDetailFieldGroup title="Vue d'ensemble">
+                      <TicketDetailFieldItem label="Client" value={ticket.client?.nom} />
+                      <TicketDetailFieldItem label="Technicien" value={ticket.technician?.name || 'Non assigné'} />
+                      <TicketDetailFieldItem label="Créé par" value={ticket.creator?.name} />
+                      <TicketDetailFieldItem label="Résolue le" value={ticket.resolved_at ? formatDate(ticket.resolved_at) : null} />
+                      <TicketDetailFieldItem label="Clôturée le" value={ticket.closed_at ? formatDate(ticket.closed_at) : null} />
+                    </TicketDetailFieldGroup>
 
-                  <section className="space-y-4 rounded-2xl bg-surface p-6">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-orange-50 rounded-lg">
-                        <svg className="h-5 w-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 013 0m-6-3V11m0-5.5a1.5 1.5 0 013 0v4m0-4V11" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                        </svg>
-                      </div>
-                      <h3 className="text-sm font-bold tracking-tight text-navy-900 uppercase">
-                        Responsabilité
-                      </h3>
-                    </div>
-                    <DetailItem
-                      label="Technicien"
-                      value={ticket.technician?.name || 'Non assigné'}
-                    />
-                    <DetailItem label="Créé par" value={ticket.creator?.name} />
-                    <DetailItem
-                      label="Résolu le"
-                      value={formatDate(ticket.resolved_at)}
-                    />
-                    <DetailItem
-                      label="Clôturé le"
-                      value={formatDate(ticket.closed_at)}
-                    />
-                  </section>
-                </div>
+                    <TicketDetailFieldGroup title="Coordonnées client">
+                      <TicketDetailFieldItem label="Nom" value={ticket.client?.nom} />
+                      {ticket.client?.email ? (
+                        <div className="mb-[10px] last:mb-0">
+                          <div className="app-panel-kicker mb-[3px] text-text-muted">
+                            E-mail
+                          </div>
+                          <div className="break-words text-[0.9375rem] font-semibold text-navy-mid">
+                            {ticket.client.email}
+                          </div>
+                        </div>
+                      ) : (
+                        <TicketDetailFieldItem label="E-mail" value={null} />
+                      )}
+                      <TicketDetailFieldItem label="Téléphone" value={ticket.client?.telephone} />
+                      <TicketDetailFieldItem label="Entreprise" value={ticket.client?.entreprise} />
+                    </TicketDetailFieldGroup>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="app-panel overflow-hidden">
+            <div className="p-5 sm:p-[20px_22px]">
+              <div className="app-panel-title mt-0 mb-[3px]">
+                Historique et commentaires
               </div>
-            )}
-          </section>
+              <div className="app-panel-copy mt-0 mb-[16px]">
+                Gardez la trace des actions et des décisions prises sur ce ticket.
+              </div>
 
-          <CommentSection
-            canComment
-            comments={comments}
-            error={commentError}
-            loading={commentLoading}
-            onSubmit={handleCommentSubmit}
-          />
+              <CommentSection
+                canComment={true}
+                comments={comments}
+                error={commentError}
+                loading={commentLoading}
+                onSubmit={handleCommentSubmit}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <section className="space-y-4 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-            <div>
-              <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">
-                Flux de traitement
-              </h2>
-              <p className="mt-1 text-sm text-navy-400">
-                Faites avancer le ticket selon son statut actuel.
-              </p>
+        <div className="grid gap-[16px] md:grid-cols-2 2xl:flex 2xl:flex-col">
+          <div className="app-panel app-ticket-rail-card p-[20px] md:col-span-2 2xl:col-span-1">
+            <div className="app-panel-title mt-0 mb-[4px]">
+              Flux de traitement
+            </div>
+            <div className="app-panel-copy mt-0 mb-[16px]">
+              Faites avancer le ticket selon son statut actuel.
             </div>
 
             {statusError ? <Alert message={statusError} type="error" /> : null}
 
-            <div className="rounded-2xl bg-surface p-5 text-center flex flex-col items-center justify-center">
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+            <div className="app-ticket-detail-group rounded-[14px] p-[14px_16px]">
+              <div className="app-panel-kicker mb-[6px]">
                 Statut actuel
-              </p>
-              <div className="mt-2.5">
+              </div>
+              <div>
                 <Badge variant={ticket.status}>{formatLabel(ticket.status)}</Badge>
               </div>
             </div>
 
-            <StatusTransitionButton
-              loading={statusLoading}
-              onTransition={handleStatusTransition}
-              role="admin"
-              status={ticket.status}
-            />
-          </section>
+            <div className="mt-4">
+              <StatusTransitionButton
+                loading={statusLoading}
+                onTransition={handleStatusTransition}
+                role="admin"
+                status={ticket.status}
+              />
+            </div>
+          </div>
 
           {!isClosed ? (
-            <AssignTechnicianSection
-              currentTechnicianId={ticket.technician?.id}
-              currentTechnicianName={ticket.technician?.name}
-              error={assignError || techniciansError}
-              key={ticket.technician?.id ?? 'unassigned'}
-              loading={assignLoading}
-              onAssign={handleAssignTechnician}
-              technicians={technicians}
-            />
+            <div className="app-panel app-ticket-rail-card p-[20px]">
+              <div className="app-panel-title mt-0 mb-[4px]">
+                Assignation technicien
+              </div>
+              <div className="app-panel-copy mt-0 mb-[16px]">
+                Transférez ce ticket pour prise en charge.
+              </div>
+              <AssignTechnicianSection
+                currentTechnicianId={ticket.technician?.id}
+                currentTechnicianName={ticket.technician?.name}
+                error={assignError || techniciansError}
+                key={ticket.technician?.id ?? 'unassigned'}
+                loading={assignLoading}
+                onAssign={handleAssignTechnician}
+                technicians={technicians}
+                plainHeader={true}
+              />
+            </div>
           ) : null}
 
-          <div className="space-y-4">
-            <AiSummaryCard summary={summary} />
+          <div className="app-panel app-ticket-rail-card p-[20px]">
+            <div className="app-panel-title mt-0 mb-[4px]">
+              Résumé IA
+            </div>
+            <div className="app-panel-copy mt-0 mb-[16px]">
+              Vue condensée pour accélérer la reprise de contexte.
+            </div>
 
             {summaryError ? <Alert message={summaryError} type="error" /> : null}
+
+            <AiSummaryCard embedded showHeader={false} summary={summary} />
 
             <GenerateSummaryButton
               hasSummary={Boolean(summary?.summary)}
               loading={summaryLoading}
               onGenerate={handleGenerateSummary}
+              premiumLook={true}
             />
           </div>
         </div>

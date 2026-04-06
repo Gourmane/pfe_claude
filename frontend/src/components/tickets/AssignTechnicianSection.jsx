@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Alert from '../ui/Alert'
 import Button from '../ui/Button'
+import Select from '../ui/Select'
 
 function AssignTechnicianSection({
   technicians = [],
@@ -9,6 +10,7 @@ function AssignTechnicianSection({
   loading = false,
   error = '',
   onAssign,
+  plainHeader = false,
 }) {
   const [selectedTechnicianId, setSelectedTechnicianId] = useState(
     currentTechnicianId ? String(currentTechnicianId) : '',
@@ -28,68 +30,70 @@ function AssignTechnicianSection({
     onAssign?.(selectedTechnicianId)
   }
 
-  return (
-    <section className="space-y-5 rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-      <div>
-        <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">Assignation</h2>
-        <p className="mt-1 text-sm text-navy-400">
-          Attribuez ce ticket au technicien responsable de l'intervention.
+  const content = (
+    <>
+      <div className="app-ticket-detail-group p-[14px_16px]">
+        <p className="app-panel-kicker mb-[6px]">Technicien actuel</p>
+        <p className="break-words text-[0.9375rem] font-semibold text-navy">
+          {currentTechnicianName || "Aucun technicien n'est encore assigné."}
         </p>
       </div>
 
-      <div className="rounded-2xl bg-surface p-4 text-center">
-        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-navy-400">
-          Technicien actuel
-        </p>
-        <p className="mt-1.5 text-sm font-medium text-navy-900">
-          {currentTechnicianName || 'Non assigné'}
-        </p>
-      </div>
+      {error ? <div className="mt-4"><Alert message={error} type="error" /></div> : null}
 
-      {error ? <Alert message={error} type="error" /> : null}
-
-      <form className="space-y-4" onSubmit={handleSubmit}>
-        <div className="space-y-1.5">
-          <label
-            className="block text-[10px] font-bold uppercase tracking-wider text-navy-400"
-            htmlFor="technician_id"
-          >
-            Technicien
-          </label>
-          <select
-            className="h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100"
-            id="technician_id"
-            onChange={(event) => setSelectedTechnicianId(event.target.value)}
-            value={selectedTechnicianId}
-          >
-            <option value="">Sélectionner un technicien</option>
-            {technicians.map((technician) => (
-              <option key={technician.id} value={String(technician.id)}>
-                {technician.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <form className="mt-4 space-y-4" onSubmit={handleSubmit}>
+        <Select
+          label="Technicien"
+          name="technician_id"
+          onChange={(event) => setSelectedTechnicianId(event.target.value)}
+          options={[
+            { label: 'Sélectionner un technicien', value: '' },
+            ...technicians.map((technician) => ({
+              label: technician.name,
+              value: String(technician.id),
+            })),
+          ]}
+          value={selectedTechnicianId}
+        />
 
         {technicians.length === 0 ? (
-          <p className="text-sm font-medium text-navy-400">
+          <p className="text-[12.5px] font-medium text-text-muted">
             Aucun technicien n'est disponible pour le moment.
           </p>
         ) : null}
 
-        <div className="flex justify-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
           <Button
+            className="sm:w-auto"
             disabled={
               !selectedTechnicianId ||
-              selectedTechnicianId === String(currentTechnicianId ?? '')
+              selectedTechnicianId === String(currentTechnicianId ?? '') ||
+              loading
             }
-            loading={loading}
             type="submit"
+            variant="secondary"
           >
-            Assigner un technicien
+            {loading ? 'Assignation...' : 'Assigner'}
           </Button>
         </div>
       </form>
+    </>
+  )
+
+  if (plainHeader) {
+    return <div className="w-full">{content}</div>
+  }
+
+  return (
+    <section className="app-panel p-[20px]">
+      <div className="mb-4 border-b border-border-light pb-4">
+        <h2 className="app-panel-title mt-0">Assignation</h2>
+        <p className="app-panel-copy mt-1">
+          Orientez rapidement le ticket vers le bon technicien.
+        </p>
+      </div>
+
+      {content}
     </section>
   )
 }

@@ -196,3 +196,45 @@ npm install
 npm run dev
 npm run build
 ```
+
+---
+
+## Design Context
+
+### Users
+- **Primary users**: IT administrators and technicians working in an internal support environment
+- **Context**: Managing clients, tickets, technician assignments, and issue resolution daily
+- **Job to be done**: Quickly triage incoming tickets, assign work, track resolution progress, and maintain oversight of all support operations
+- **Usage pattern**: Frequent, task-driven sessions — users need to scan, decide, and act fast
+
+### Brand Personality
+- **Three words**: Professional, precise, reliable
+- **Voice**: Authoritative but not cold — clear, direct, structured
+- **Tone**: Confident and action-oriented. No playfulness or casualness — this is a serious operational tool
+- **Emotional goals**: Primarily **confidence & control** (users feel in command of their workload), with secondary **urgency & speed** (priorities surface immediately, actions are decisive)
+
+### Aesthetic Direction
+- **Visual tone**: Enterprise-grade precision with modern polish — functional density meets clean surfaces
+- **Primary references**: Zendesk/Freshdesk for functional patterns and information density; Linear/Vercel for visual style, typography, and modern minimalism
+- **Anti-references**: Overly playful SaaS tools (Slack-like emoji-heavy), toy-like dashboards, generic Bootstrap admin templates
+- **Theme**: Light mode only
+- **Color system**:
+  - Primary: Deep navy gradient (`#0F2A44` → `#245381`) — conveys authority and trust
+  - Surfaces: Cool gray layering (`#F0F4F8`, `#F3F6F9`, `#EEF1F5`, `#FFFFFF`) — creates depth without noise
+  - Semantic: Sky (in progress), Emerald (resolved), Amber (high), Red (urgent) — status clarity at a glance
+  - Role accents: Navy (admin), Cyan (technician) — subtle role differentiation
+- **Typography**: Inter (body) + Manrope (display) — professional, highly legible, modern
+- **Shape language**: Rounded-xl to 3xl corners, subtle navy-tinted shadows, gradient buttons with inset highlights
+- **Signature patterns**: Uppercase micro-labels (10px bold tracking-wide), left-border accent badges, backdrop-blur sticky headers, surface layering system
+
+### Design Principles
+
+1. **Clarity over decoration** — Every element must earn its place. Prioritize scannability, clear hierarchy, and instant comprehension over aesthetic flourish.
+
+2. **Density with breathing room** — Pack information efficiently (like Zendesk) but use generous whitespace and surface layering (like Linear) to prevent overwhelm.
+
+3. **Status at a glance** — Ticket status, priority, and assignment state must be visually distinct and immediately recognizable. Use color, typography weight, and spatial position.
+
+4. **Action-oriented interfaces** — Primary actions should be prominent and confident. The UI should guide users toward the next logical action.
+
+5. **Consistent professionalism** — Maintain the navy-anchored palette, uppercase micro-labels, and structured layouts everywhere. Every screen should unmistakably belong to Precision IT.

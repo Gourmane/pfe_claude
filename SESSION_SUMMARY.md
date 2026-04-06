@@ -1,6 +1,6 @@
 # Session Summary — AI IT Assistant Platform (PFE)
 
-_Last updated: 2026-04-02_
+_Last updated: 2026-04-02 (Session 2)_
 
 ---
 
@@ -41,8 +41,11 @@ _Last updated: 2026-04-02_
 | 9 | Ticket Detail + Status + Comments + AI | Done |
 | 10 | Technician Dashboard | Done |
 | 11 | Polish, QA, Demo Readiness | Done |
+| 12 | UI Redesign (Professional Navy Theme) | Done |
 
 **Audit:** `REVIEW_ALL.md` created at project root. All critical and major issues fixed.
+
+**UI Redesign:** Full visual overhaul on branch `ui-polish`. 35 files modified. Build clean.
 
 ---
 
@@ -113,7 +116,7 @@ frontend/src/
 │   └── formHelpers.js         # mapValidationErrors()
 ├── App.jsx                    # RouterProvider
 ├── main.jsx                   # StrictMode + AuthProvider
-└── index.css                  # @import "tailwindcss"
+└── index.css                  # @import "tailwindcss" + @theme (navy palette, surface tokens, fonts)
 ```
 
 ### Key design decisions
@@ -328,7 +331,120 @@ See `DEMO_CHECKLIST.md` for full 12-step demo walkthrough.
 
 ---
 
-## 11. How to Start
+## 11. UI Redesign — Professional Navy Theme (Phase 12)
+
+**Branch:** `ui-polish`
+**Date:** 2026-04-02
+**Files modified:** 35 frontend files
+**Build:** Clean, 0 warnings, ~630ms
+
+### Design System
+
+A complete visual overhaul was applied to replace the default Tailwind look with a cohesive, professional navy-themed design system.
+
+**Custom color tokens** defined in `index.css` via `@theme`:
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--color-primary` | `#0F2A44` | Sidebar, buttons, gradients |
+| `--color-primary-light` | `#245381` | Gradient endpoints, eyebrow labels |
+| `--color-primary-container` | `#EBF3FF` | Comment backgrounds |
+| `--color-surface` | `#f7f9fc` | Card inner sections |
+| `--color-surface-container-low` | `#F0F4F8` | Page background |
+| `--color-surface-container-lowest` | `#ffffff` | Cards, sidebar |
+| `--color-surface-section` | `#EEF1F5` | Table headers, inputs bg |
+| `--color-surface-content` | `#F3F6F9` | Main content area |
+| `--color-navy-50` to `--color-navy-900` | Full scale | Text, borders, hover states |
+
+**Typography:**
+- `--font-sans`: Inter (body text)
+- `--font-display`: Manrope (headings, stat numbers, section titles)
+- Loaded via Google Fonts in `index.html` with `preconnect`
+
+**Visual patterns applied globally:**
+- `rounded-2xl` cards with `shadow-[0_2px_8px_rgba(15,42,68,0.04)]`
+- `rounded-xl` inputs, buttons, nav items
+- Uppercase 10px tracking labels (`text-[10px] font-bold uppercase tracking-wider text-navy-400`)
+- Left-border accent badges (`border-l-[3px]`)
+- Gradient primary buttons (`bg-gradient-to-b from-[#0F2A44] to-[#245381]`)
+- Sticky blur header (`bg-surface-content/90 backdrop-blur-md`)
+- Hover micro-animations (`hover:-translate-y-0.5`, `transition-all duration-200`)
+- Custom thin scrollbar (6px, `#cbd5e1` thumb)
+
+### Files Changed
+
+**Foundation:**
+- `index.html` — Added Inter + Manrope font loading, `lang="fr"`, title "Precision IT"
+- `index.css` — Full `@theme` block with navy palette, surface tokens, custom scrollbar
+- `public/favicon.svg` — Replaced Vite default with navy gradient bolt icon
+
+**UI Components (8 files):**
+- `Alert.jsx` — Left-border accent style, navy/red/emerald color coding
+- `Badge.jsx` — Left-border variant badges for status + priority
+- `Button.jsx` — Navy gradient primary, surface secondary, red danger, 3 sizes, focus ring
+- `EmptyState.jsx` — Centered card with document icon, navy tones
+- `Input.jsx` — Surface-section bg, navy focus ring, uppercase label
+- `Modal.jsx` — Navy overlay blur, rounded-2xl dialog, display font title
+- `Pagination.jsx` — Card container, rounded-xl page buttons, navy active state
+- `Spinner.jsx` — Navy-100/navy-700 border colors
+
+**Layouts (3 files):**
+- `AdminLayout.jsx` — Sidebar with gradient bolt logo, "Precision IT" brand, nav with navy active state, sticky blur header, ADMIN role badge
+- `TechnicianLayout.jsx` — Same structure, cyan accent color for TECH role badge, "Operations" eyebrow label
+- `AuthLayout.jsx` — Centered login container
+
+**Pages (11 files):**
+- `LoginPage.jsx` — Rounded-3xl panel, navy gradient submit button, "Precision IT" brand eyebrow, surface-section inputs
+- `NotFoundPage.jsx` — Navy themed 404 with Manrope heading
+- `admin/DashboardPage.jsx` — Stat cards with display font numbers, hover lift, section table
+- `admin/ClientsPage.jsx` — Search card, navy table with hover rows, delete modal
+- `admin/ClientCreatePage.jsx` — Page header with eyebrow + subtitle, form card
+- `admin/ClientEditPage.jsx` — Same pattern as create
+- `admin/TicketsPage.jsx` — Filters card, table with row navigation, pagination
+- `admin/TicketCreatePage.jsx` — Nested card sections, client search
+- `admin/TicketDetailPage.jsx` — Two-column layout, info cards with orange icons, sidebar sections
+- `technician/DashboardPage.jsx` — 3 stat cards, clickable table rows, cyan eyebrow
+- `technician/TicketsPage.jsx` — Same table pattern, cyan accent
+- `technician/TicketDetailPage.jsx` — Read-only detail, cyan theme differentiator
+
+**Ticket Components (5 files):**
+- `TicketFilters.jsx` — Surface-section selects, navy styling
+- `TicketForm.jsx` — Navy labels, surface inputs, client search dropdown
+- `CommentSection.jsx` — Primary-container comment bubbles, navy textarea
+- `AssignTechnicianSection.jsx` — Card with current tech display, navy select
+- `StatusTransitionButton.jsx` — Uses themed Button (no visual change needed)
+
+**AI Components (2 files):**
+- `AiSummaryCard.jsx` — Surface-section empty state, navy category badge
+- `GenerateSummaryButton.jsx` — Secondary button variant (no visual change needed)
+
+**Router (3 files):**
+- `ProtectedRoute.jsx` — Navy spinner during auth check
+- `RoleRoute.jsx` — Navy spinner during role check
+- `index.jsx` — Navy spinner in Suspense fallback
+
+### Design Differentiation: Admin vs Technician
+
+| Element | Admin | Technician |
+|---------|-------|------------|
+| Eyebrow label color | `text-primary-light opacity-70` (navy) | `text-cyan-700` |
+| Sidebar sub-brand | "Admin" | "Operations" |
+| Header role badge | Navy dot + "ADMIN" | Cyan dot + "TECH" |
+| Role badge glow | `rgba(15,42,68,0.4)` | `rgba(8,145,178,0.4)` |
+
+### Key Design Decisions
+
+- **No external UI library** — pure Tailwind CSS 4 with custom tokens
+- **Navy over blue** — darker, more corporate/serious tone appropriate for IT support
+- **Inter for body, Manrope for display** — clear visual hierarchy
+- **Left-border badges** instead of pill badges — more structured, enterprise feel
+- **Gradient buttons** with inset highlight — subtle depth without being flashy
+- **Sticky blur header** — modern SaaS pattern for context persistence
+- **Surface token system** — multiple grays for layered depth without harsh borders
+- **Micro-animations** — hover lifts (0.5px), active press (scale 0.98), transitions 200ms
+
+---
+
+## 12. How to Start
 
 1. **Fresh database** from `backend/`:
    ```bash
@@ -355,7 +471,16 @@ See `DEMO_CHECKLIST.md` for full 12-step demo walkthrough.
 
 ---
 
-## Key Backend API Reference
+## 13. Git Branch Structure
+
+| Branch | Purpose | State |
+|--------|---------|-------|
+| `main` | Stable release | All 11 phases + audit |
+| `ui-polish` | Professional navy UI redesign | 35 files modified, build clean, not yet merged |
+
+---
+
+## 14. Key Backend API Reference
 
 | Method | Endpoint | Auth | Role | Purpose |
 |--------|----------|------|------|---------|

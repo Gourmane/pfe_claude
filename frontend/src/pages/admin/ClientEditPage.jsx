@@ -39,7 +39,7 @@ function ClientEditPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource.")
+          setError("Vous n'avez pas acces a cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -84,20 +84,26 @@ function ClientEditPage() {
     navigate('/admin/clients')
   }
 
+  const header = (
+    <div>
+      <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+        Admin
+      </p>
+      <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy-900">
+        Modifier le client
+      </h1>
+      <p className="mt-2 max-w-2xl text-sm leading-6 text-navy-500">
+        Mettez a jour la fiche client et gardez les coordonnees exactes pour le
+        support.
+      </p>
+    </div>
+  )
+
   if (loading) {
     return (
       <section className="space-y-6">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-            Modifier le client
-          </h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Mettez à jour la fiche client et gardez les coordonnées exactes.
-          </p>
-        </div>
-
-        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+        {header}
+        <div className="app-panel px-6 py-16">
           <div className="space-y-3">
             <Spinner size="lg" />
             <p className="text-center text-sm font-medium text-navy-400">
@@ -112,16 +118,7 @@ function ClientEditPage() {
   if (error && !client) {
     return (
       <section className="space-y-6">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-            Modifier le client
-          </h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Mettez à jour la fiche client et gardez les coordonnées exactes.
-          </p>
-        </div>
-
+        {header}
         <Alert message={error} type="error" />
       </section>
     )
@@ -130,16 +127,7 @@ function ClientEditPage() {
   if (!client) {
     return (
       <section className="space-y-6">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-            Modifier le client
-          </h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Mettez à jour la fiche client et gardez les coordonnées exactes.
-          </p>
-        </div>
-
+        {header}
         <EmptyState message="Client introuvable." />
       </section>
     )
@@ -147,35 +135,32 @@ function ClientEditPage() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-        <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">
-          Modifier le client
-        </h1>
-        <p className="mt-2 text-sm text-navy-400">
-          Mettez à jour la fiche client et gardez les coordonnées exactes.
-        </p>
-      </div>
+      {header}
 
-      <section className="rounded-2xl bg-surface-container-lowest p-6 lg:p-8 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-        <div className="mb-6">
-          <h2 className="font-display text-lg font-bold tracking-tight text-navy-900">
+      <section className="app-panel p-4 sm:p-5 lg:p-6">
+        <div className="border-b border-navy-100 pb-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+            Fiche
+          </p>
+          <h2 className="mt-1 font-display text-[1.25rem] font-semibold tracking-tight text-navy-900">
             Informations du client
           </h2>
-          <p className="mt-1 text-sm text-navy-400">
-            Modifiez les informations enregistrées pour {client.nom}.
+          <p className="mt-1 text-sm text-navy-500">
+            Modifiez les informations enregistrees pour {client.nom}.
           </p>
         </div>
 
-        <ClientForm
-          error={error}
-          fieldErrors={fieldErrors}
-          initialValues={client}
-          loading={saving}
-          onCancel={handleCancel}
-          onSubmit={handleSubmit}
-          submitLabel="Enregistrer les modifications"
-        />
+        <div className="mt-5">
+          <ClientForm
+            error={error}
+            fieldErrors={fieldErrors}
+            initialValues={client}
+            loading={saving}
+            onCancel={handleCancel}
+            onSubmit={handleSubmit}
+            submitLabel="Enregistrer les modifications"
+          />
+        </div>
       </section>
     </section>
   )

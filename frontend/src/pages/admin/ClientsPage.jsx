@@ -11,6 +11,49 @@ import Spinner from '../../components/ui/Spinner'
 
 const FALLBACK_ERROR_MESSAGE = 'Une erreur est survenue.'
 
+function ClientCard({ client, onDelete, onEdit }) {
+  return (
+    <article className="app-panel p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-navy-900">{client.nom}</p>
+          <p className="mt-1 text-sm text-navy-500">
+            {client.entreprise || 'Entreprise non renseignee'}
+          </p>
+        </div>
+      </div>
+
+      <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+            Telephone
+          </dt>
+          <dd className="mt-1 text-sm font-medium text-navy-700">
+            {client.telephone}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+            E-mail
+          </dt>
+          <dd className="mt-1 break-all text-sm font-medium text-navy-700">
+            {client.email || '--'}
+          </dd>
+        </div>
+      </dl>
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:justify-end">
+        <Button onClick={onEdit} size="sm" variant="secondary">
+          Modifier
+        </Button>
+        <Button onClick={onDelete} size="sm" variant="danger">
+          Supprimer
+        </Button>
+      </div>
+    </article>
+  )
+}
+
 function ClientsPage() {
   const navigate = useNavigate()
   const [clientsPage, setClientsPage] = useState(null)
@@ -48,7 +91,7 @@ function ClientsPage() {
         }
 
         if (requestError.response?.status === 403) {
-          setError("Vous n'avez pas accès à cette ressource.")
+          setError("Vous n'avez pas acces a cette ressource.")
         } else {
           setError(
             requestError.response?.data?.message || FALLBACK_ERROR_MESSAGE,
@@ -144,15 +187,21 @@ function ClientsPage() {
   }
 
   const clients = clientsPage?.data ?? []
+  const totalClients = clientsPage?.total ?? clients.length
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-light opacity-70">Admin</p>
-          <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-navy-900">Clients</h1>
-          <p className="mt-2 text-sm text-navy-400">
-            Gérez l'annuaire client utilisé dans tout le flux de support.
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+            Admin
+          </p>
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy-900">
+            Clients
+          </h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-navy-500">
+            Gardez l'annuaire client propre, consultable et fiable pour toutes
+            les operations de support.
           </p>
         </div>
 
@@ -161,9 +210,23 @@ function ClientsPage() {
         </Button>
       </div>
 
-      <section className="rounded-2xl bg-surface-container-lowest p-6 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+      <section className="app-panel p-4 sm:p-5">
+        <div className="flex flex-col gap-3 border-b border-navy-100 pb-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+              Recherche
+            </p>
+            <h2 className="mt-1 font-display text-[1.25rem] font-semibold tracking-tight text-navy-900">
+              Filtrer les fiches client
+            </h2>
+          </div>
+          <p className="text-sm text-navy-500">
+            {totalClients} client(s) dans le resultat courant.
+          </p>
+        </div>
+
         <form
-          className="flex flex-col gap-4 lg:flex-row lg:items-end"
+          className="mt-4 flex flex-col gap-4 lg:flex-row lg:items-end"
           onSubmit={handleSearchSubmit}
         >
           <div className="min-w-0 flex-1">
@@ -171,7 +234,7 @@ function ClientsPage() {
               label="Rechercher un client"
               name="search"
               onChange={(event) => setSearchInput(event.target.value)}
-              placeholder="Rechercher par nom ou téléphone"
+              placeholder="Rechercher par nom ou telephone"
               value={searchInput}
             />
           </div>
@@ -188,7 +251,7 @@ function ClientsPage() {
       </section>
 
       {loading ? (
-        <div className="rounded-2xl bg-surface-container-lowest px-6 py-16 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+        <div className="app-panel px-6 py-16">
           <div className="space-y-3">
             <Spinner size="lg" />
             <p className="text-center text-sm font-medium text-navy-400">
@@ -200,11 +263,11 @@ function ClientsPage() {
         <Alert message={error} type="error" />
       ) : clients.length === 0 ? (
         <EmptyState
-          action={searchQuery ? 'Effacer la recherche' : 'Créer un client'}
+          action={searchQuery ? 'Effacer la recherche' : 'Creer un client'}
           message={
             searchQuery
-              ? 'Aucun client ne correspond à votre recherche.'
-              : 'Aucun client n\u2019est disponible pour le moment.'
+              ? 'Aucun client ne correspond a votre recherche.'
+              : "Aucun client n'est disponible pour le moment."
           }
           onAction={
             searchQuery
@@ -214,47 +277,55 @@ function ClientsPage() {
         />
       ) : (
         <div className="space-y-4">
-          <section className="overflow-hidden rounded-2xl bg-surface-container-lowest shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
+          <div className="grid gap-4 lg:hidden md:grid-cols-2">
+            {clients.map((client) => (
+              <ClientCard
+                client={client}
+                key={client.id}
+                onDelete={() => handleDeleteClick(client)}
+                onEdit={() => navigate(`/admin/clients/${client.id}/edit`)}
+              />
+            ))}
+          </div>
+
+          <section className="app-table-shell hidden lg:block">
             <div className="overflow-x-auto">
               <table className="min-w-full text-left">
-                <thead className="bg-surface-section">
+                <thead className="bg-surface">
                   <tr>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Nom
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
-                      Téléphone
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
+                      Telephone
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       E-mail
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400">
+                    <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Entreprise
                     </th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.15em] text-navy-400 text-right">
+                    <th className="px-5 py-4 text-right text-[10px] font-bold uppercase tracking-[0.18em] text-navy-400">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-navy-100/50">
+                <tbody className="divide-y divide-navy-100">
                   {clients.map((client) => (
-                    <tr
-                      className="transition-colors duration-200 hover:bg-navy-50/50"
-                      key={client.id}
-                    >
-                      <td className="px-6 py-4 text-sm font-semibold text-navy-800">
+                    <tr className="hover:bg-surface" key={client.id}>
+                      <td className="px-5 py-4 text-sm font-semibold text-navy-900">
                         {client.nom}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
+                      <td className="px-5 py-4 text-sm font-medium text-navy-700">
                         {client.telephone}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
+                      <td className="px-5 py-4 text-sm font-medium text-navy-700">
                         {client.email || '--'}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-navy-600">
+                      <td className="px-5 py-4 text-sm font-medium text-navy-700">
                         {client.entreprise || '--'}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-5 py-4">
                         <div className="flex justify-end gap-3">
                           <Button
                             onClick={() => navigate(`/admin/clients/${client.id}/edit`)}
@@ -292,7 +363,9 @@ function ClientsPage() {
       >
         <div className="space-y-4">
           <p className="leading-6 text-navy-600">
-            Supprimer <span className="font-semibold text-navy-900">{deleteTarget?.nom}</span> ? Cette action est définitive.
+            Supprimer{' '}
+            <span className="font-semibold text-navy-900">{deleteTarget?.nom}</span>{' '}
+            ? Cette action est definitive.
           </p>
 
           {deleteError ? <Alert message={deleteError} type="error" /> : null}

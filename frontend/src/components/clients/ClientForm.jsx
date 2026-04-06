@@ -59,7 +59,7 @@ function ClientForm({
     <form className="space-y-6" onSubmit={handleSubmit}>
       {error ? <Alert message={error} type="error" /> : null}
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-2">
         <Input
           error={fieldErrors.nom}
           label="Nom"
@@ -70,7 +70,7 @@ function ClientForm({
         />
         <Input
           error={fieldErrors.telephone}
-          label="Téléphone"
+          label="Telephone"
           name="telephone"
           onChange={handleChange}
           required
@@ -93,17 +93,15 @@ function ClientForm({
         />
       </div>
 
-      <div className="grid gap-5">
-        <Input
-          error={fieldErrors.adresse}
-          label="Adresse"
-          name="adresse"
-          onChange={handleChange}
-          value={formValues.adresse}
-        />
-      </div>
+      <Input
+        error={fieldErrors.adresse}
+        label="Adresse"
+        name="adresse"
+        onChange={handleChange}
+        value={formValues.adresse}
+      />
 
-      <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 border-t border-navy-100 pt-4 sm:flex-row sm:justify-end">
         <Button onClick={onCancel} type="button" variant="secondary">
           Annuler
         </Button>

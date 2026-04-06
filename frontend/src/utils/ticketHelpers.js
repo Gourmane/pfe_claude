@@ -1,11 +1,11 @@
 const DISPLAY_LABELS = {
-  closed: 'Clôturé',
+  closed: 'Cloture',
   high: 'Haute',
   in_progress: 'En cours',
   low: 'Faible',
   medium: 'Moyenne',
   pending: 'En attente',
-  resolved: 'Résolu',
+  resolved: 'Resolu',
   urgent: 'Urgente',
 }
 

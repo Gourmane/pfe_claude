@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import Alert from '../ui/Alert'
 import Button from '../ui/Button'
 import Input from '../ui/Input'
+import Select from '../ui/Select'
+import Textarea from '../ui/Textarea'
 
 const DEFAULT_FORM_VALUES = {
   title: '',
@@ -11,91 +13,12 @@ const DEFAULT_FORM_VALUES = {
 }
 
 const PRIORITY_OPTIONS = [
-  { label: 'Sélectionner une priorité', value: '' },
+  { label: 'Selectionner une priorite', value: '' },
   { label: 'Faible', value: 'low' },
   { label: 'Moyenne', value: 'medium' },
   { label: 'Haute', value: 'high' },
   { label: 'Urgente', value: 'urgent' },
 ]
-
-function TextareaField({ error, id, label, name, onChange, required, value }) {
-  const errorId = error ? `${id}-error` : undefined
-
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
-        {label}
-      </label>
-      <textarea
-        aria-describedby={errorId}
-        aria-invalid={error ? 'true' : 'false'}
-        className={[
-          'min-h-36 w-full rounded-xl bg-surface-section px-3.5 py-3 text-sm text-navy-900 border border-transparent outline-none transition-all placeholder:text-navy-300',
-          error
-            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100'
-            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
-        ].join(' ')}
-        id={id}
-        name={name}
-        onChange={onChange}
-        required={required}
-        value={value}
-      />
-      {error ? (
-        <p className="text-sm text-red-600" id={errorId}>
-          {error}
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function SelectField({
-  error,
-  id,
-  label,
-  name,
-  onChange,
-  options,
-  required,
-  value,
-}) {
-  const errorId = error ? `${id}-error` : undefined
-
-  return (
-    <div className="space-y-1.5">
-      <label className="block text-[10px] font-bold uppercase tracking-wider text-navy-400" htmlFor={id}>
-        {label}
-      </label>
-      <select
-        aria-describedby={errorId}
-        aria-invalid={error ? 'true' : 'false'}
-        className={[
-          'h-11 w-full rounded-xl bg-surface-section px-3.5 text-sm text-navy-900 border border-transparent outline-none transition-all',
-          error
-            ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100'
-            : 'focus:bg-surface-container-lowest focus:border-navy-200 focus:ring-4 focus:ring-navy-100 hover:border-navy-100',
-        ].join(' ')}
-        id={id}
-        name={name}
-        onChange={onChange}
-        required={required}
-        value={value}
-      >
-        {options.map((option) => (
-          <option key={`${name}-${option.value || 'empty'}`} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      {error ? (
-        <p className="text-sm text-red-600" id={errorId}>
-          {error}
-        </p>
-      ) : null}
-    </div>
-  )
-}
 
 function getFormValues(initialValues) {
   return {
@@ -133,7 +56,7 @@ function TicketForm({
       {
         label: clientsLoading
           ? 'Chargement des clients...'
-          : 'Sélectionner un client',
+          : 'Selectionner un client',
         value: '',
       },
     ]
@@ -187,76 +110,97 @@ function TicketForm({
     <form className="space-y-6" onSubmit={handleSubmit}>
       {error ? <Alert message={error} type="error" /> : null}
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Input
-          error={fieldErrors.title}
-          label="Titre"
-          name="title"
-          onChange={handleChange}
-          required
-          value={formValues.title}
-        />
-        <SelectField
-          error={fieldErrors.priority}
-          id="priority"
-          label="Priorité"
-          name="priority"
-          onChange={handleChange}
-          options={PRIORITY_OPTIONS}
-          required
-          value={formValues.priority}
-        />
-      </div>
-
-      <TextareaField
-        error={fieldErrors.description}
-        id="description"
-        label="Description"
-        name="description"
-        onChange={handleChange}
-        required
-        value={formValues.description}
-      />
-
-      <section className="space-y-4 rounded-2xl bg-surface-container-lowest p-5 shadow-[0_2px_8px_rgba(15,42,68,0.04)]">
-        <div>
-          <h3 className="font-display text-lg font-bold tracking-tight text-navy-900">Client</h3>
-          <p className="mt-1 text-sm text-navy-400">
-            Recherchez un client, puis sélectionnez la fiche correspondante.
+      <section className="app-panel-soft p-4 sm:p-5">
+        <div className="border-b border-navy-100 pb-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+            Contexte
+          </p>
+          <h3 className="mt-1 font-display text-[1.25rem] font-semibold tracking-tight text-navy-900">
+            Informations du ticket
+          </h3>
+          <p className="mt-1 text-sm text-navy-500">
+            Resumez le probleme de maniere claire et choisissez la bonne
+            priorite.
           </p>
         </div>
 
-        <Input
-          label="Rechercher un client"
-          name="client-search"
-          onChange={(event) => onClientSearchChange(event.target.value)}
-          placeholder="Rechercher par nom ou téléphone"
-          value={clientSearch}
-        />
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <Input
+            error={fieldErrors.title}
+            label="Titre"
+            name="title"
+            onChange={handleChange}
+            required
+            value={formValues.title}
+          />
+          <Select
+            error={fieldErrors.priority}
+            label="Priorite"
+            name="priority"
+            onChange={handleChange}
+            options={PRIORITY_OPTIONS}
+            required
+            value={formValues.priority}
+          />
+        </div>
 
-        <SelectField
-          error={fieldErrors.client_id}
-          id="client_id"
-          label="Client"
-          name="client_id"
-          onChange={handleChange}
-          options={clientOptions}
-          required
-          value={formValues.client_id}
-        />
+        <div className="mt-4">
+          <Textarea
+            error={fieldErrors.description}
+            label="Description"
+            name="description"
+            onChange={handleChange}
+            required
+            value={formValues.description}
+          />
+        </div>
+      </section>
+
+      <section className="app-panel p-4 sm:p-5">
+        <div className="border-b border-navy-100 pb-4">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+            Liaison
+          </p>
+          <h3 className="mt-1 font-display text-[1.25rem] font-semibold tracking-tight text-navy-900">
+            Client concerne
+          </h3>
+          <p className="mt-1 text-sm text-navy-500">
+            Recherchez le client, puis selectionnez la fiche a lier au ticket.
+          </p>
+        </div>
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <Input
+            label="Recherche client"
+            name="client-search"
+            onChange={(event) => onClientSearchChange(event.target.value)}
+            placeholder="Rechercher par nom ou telephone"
+            value={clientSearch}
+          />
+
+          <Select
+            error={fieldErrors.client_id}
+            label="Client"
+            name="client_id"
+            onChange={handleChange}
+            options={clientOptions}
+            required
+            value={formValues.client_id}
+          />
+        </div>
 
         {clientsError ? (
-          <p className="text-sm text-red-600">{clientsError}</p>
+          <p className="mt-3 text-sm text-red-600">{clientsError}</p>
         ) : null}
 
         {!clientsLoading && clients.length === 0 && !clientsError ? (
-          <p className="text-sm text-navy-400">
-            Aucun client ne correspond à cette recherche.
+          <p className="mt-3 text-sm text-navy-500">
+            Aucun client ne correspond a cette recherche.
           </p>
         ) : null}
       </section>
 
-      <div className="flex flex-col-reverse gap-3 pt-6 sm:flex-row sm:justify-between">
+      <div className="flex flex-col-reverse gap-3 border-t border-navy-100 pt-4 sm:flex-row sm:justify-end">
         <Button onClick={onCancel} type="button" variant="secondary">
           Annuler
         </Button>

@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 import AuthLayout from '../layouts/AuthLayout'
 import TechnicianLayout from '../layouts/TechnicianLayout'
+import GuardSpinner from './GuardSpinner'
 import ProtectedRoute from './ProtectedRoute'
 import RoleRoute from './RoleRoute'
 
@@ -34,22 +35,11 @@ const TechnicianTicketsPage = lazy(
   () => import('../pages/technician/TicketsPage'),
 )
 
-function RouteSpinner() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-surface-container-lowest px-4">
-      <div className="flex flex-col items-center gap-3 text-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-2 border-primary-container border-t-primary" />
-        <p className="text-sm font-medium text-slate-500">Chargement...</p>
-      </div>
-    </main>
-  )
-}
-
 function renderLazyPage(Page) {
   const Component = Page
 
   return (
-    <Suspense fallback={<RouteSpinner />}>
+    <Suspense fallback={<GuardSpinner label="Chargement..." />}>
       <Component />
     </Suspense>
   )

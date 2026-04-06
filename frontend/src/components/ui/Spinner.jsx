@@ -4,16 +4,22 @@ const SIZE_CLASS_NAMES = {
   lg: 'h-12 w-12 border-[3px]',
 }
 
-function Spinner({ size = 'md' }) {
+function Spinner({ size = 'md', label = 'Chargement en cours' }) {
   const sizeClassName = SIZE_CLASS_NAMES[size] ?? SIZE_CLASS_NAMES.md
 
   return (
-    <div className="flex items-center justify-center">
-      <div
-        aria-label="Chargement"
-        className={`animate-spin rounded-full border-navy-100 border-t-navy-700 ${sizeClassName}`}
-        role="status"
-      />
+    <div className="flex items-center justify-center" role="status">
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className={`animate-spin rounded-full border-primary-pale border-t-primary-vivid ${sizeClassName}`}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-[28%] rounded-full border border-primary/20"
+        />
+      </div>
+      <span className="sr-only">{label}</span>
     </div>
   )
 }
