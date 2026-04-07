@@ -12,10 +12,6 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\AiSummaryController;
 use App\Http\Controllers\Api\TechnicianController;
 
-Route::get('/test', function () {
-    return response()->json(['message' => 'API OK']);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Public routes

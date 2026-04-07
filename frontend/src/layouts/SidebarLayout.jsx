@@ -198,8 +198,8 @@ function SidebarLayout({
   )
 
   return (
-    <div className="min-h-screen bg-transparent font-sans text-text-primary antialiased xl:flex xl:h-screen xl:overflow-hidden">
-      <aside className="relative hidden h-full w-[210px] shrink-0 flex-col overflow-y-auto bg-[#1B2B4B] px-5 pt-[28px] pb-[28px] xl:flex [&::after]:content-[''] [&::after]:absolute [&::after]:right-0 [&::after]:top-0 [&::after]:bottom-0 [&::after]:w-[1px] [&::after]:bg-gradient-to-b [&::after]:from-[rgba(193,138,103,0.35)] [&::after]:to-[rgba(193,138,103,0.04)]">
+    <div className="min-h-screen bg-transparent font-sans text-text-primary antialiased xl:flex">
+      <aside className="relative hidden w-[210px] shrink-0 flex-col overflow-y-auto bg-[#1B2B4B] px-5 pt-[28px] pb-[28px] xl:sticky xl:top-0 xl:flex xl:h-screen [&::after]:content-[''] [&::after]:absolute [&::after]:right-0 [&::after]:top-0 [&::after]:bottom-0 [&::after]:w-[1px] [&::after]:bg-gradient-to-b [&::after]:from-[rgba(193,138,103,0.35)] [&::after]:to-[rgba(193,138,103,0.04)]">
         {sidebarContent}
       </aside>
 
@@ -228,7 +228,7 @@ function SidebarLayout({
         </>
       ) : null}
 
-      <div aria-hidden={drawerOpen} className="flex min-w-0 flex-1 flex-col xl:h-full xl:overflow-y-auto">
+      <div aria-hidden={drawerOpen} className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-border-light bg-[rgba(255,255,255,0.82)] px-4 py-3.5 backdrop-blur-xl sm:px-6 xl:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <button

@@ -7,6 +7,18 @@ import Spinner from '../components/ui/Spinner'
 import { useAuth } from '../hooks/useAuth'
 import { getDashboardPath } from '../utils/routeHelpers'
 
+function getLoginErrorMessage(requestError) {
+  if (requestError.response?.data?.message) {
+    return requestError.response.data.message
+  }
+
+  if (requestError.code === 'ERR_NETWORK') {
+    return "Connexion impossible au serveur. Verifiez que l'API backend est demarree et accessible."
+  }
+
+  return 'Une erreur est survenue pendant la connexion.'
+}
+
 function LoginPage() {
   const { user, login, loading } = useAuth()
   const [email, setEmail] = useState('')
@@ -22,9 +34,7 @@ function LoginPage() {
     try {
       await login(email, password)
     } catch (requestError) {
-      setError(
-        requestError.response?.data?.message || 'Une erreur est survenue.',
-      )
+      setError(getLoginErrorMessage(requestError))
     } finally {
       setIsSubmitting(false)
     }

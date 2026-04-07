@@ -66,7 +66,10 @@ class AiSummaryController extends Controller
                 'suggested_category' => $payload['suggested_category'],
                 'source' => 'groq',
             ];
-        } catch (Throwable) {
+        } catch (Throwable $e) {
+            \Log::warning('Groq AI generation failed, using fallback.', [
+                'error' => $e->getMessage()
+            ]);
         }
 
         return $this->generateFallbackSummary($description);
