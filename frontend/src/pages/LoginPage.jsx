@@ -70,7 +70,7 @@ function LoginPage() {
               </div>
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#D7C5B8]">
-                  Precision IT
+                  Fixora AI
                 </p>
                 <p className="mt-1 font-display text-[1.45rem] font-semibold tracking-tight text-white">
                   Support Console
@@ -82,7 +82,7 @@ function LoginPage() {
               Plateforme interne
             </p>
             <h1 className="mt-3 max-w-xl font-display text-[clamp(2.3rem,8vw,3.75rem)] font-semibold leading-tight tracking-tight text-white">
-              Connexion a la plateforme support
+              Connexion a Fixora AI
             </h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-white/72">
               Outil interne pour superviser les tickets, affecter les

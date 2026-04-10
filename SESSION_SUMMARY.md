@@ -1,4 +1,4 @@
-# Session Summary — AI IT Assistant Platform (PFE)
+# Session Summary — Fixora AI (PFE)
 
 _Last updated: 2026-04-02 (Session 2)_
 
@@ -6,7 +6,7 @@ _Last updated: 2026-04-02 (Session 2)_
 
 ## 1. Project Overview
 
-**Name:** AI IT Assistant Platform
+**Name:** Fixora AI
 **Type:** PFE MVP — AI-powered IT Support Ticket Management System
 
 **What it does:** A web application for managing IT support tickets. Admin users create clients, open tickets, assign technicians, and oversee operations. Technicians handle assigned tickets, update status, and add comments. An AI integration (Groq) provides ticket summarization and category suggestions.
@@ -373,7 +373,7 @@ A complete visual overhaul was applied to replace the default Tailwind look with
 ### Files Changed
 
 **Foundation:**
-- `index.html` — Added Inter + Manrope font loading, `lang="fr"`, title "Precision IT"
+- `index.html` — Added Inter + Manrope font loading, `lang="fr"`, title "Fixora AI"
 - `index.css` — Full `@theme` block with navy palette, surface tokens, custom scrollbar
 - `public/favicon.svg` — Replaced Vite default with navy gradient bolt icon
 
@@ -388,12 +388,12 @@ A complete visual overhaul was applied to replace the default Tailwind look with
 - `Spinner.jsx` — Navy-100/navy-700 border colors
 
 **Layouts (3 files):**
-- `AdminLayout.jsx` — Sidebar with gradient bolt logo, "Precision IT" brand, nav with navy active state, sticky blur header, ADMIN role badge
+- `AdminLayout.jsx` — Sidebar with gradient bolt logo, "Fixora AI" brand, nav with navy active state, sticky blur header, ADMIN role badge
 - `TechnicianLayout.jsx` — Same structure, cyan accent color for TECH role badge, "Operations" eyebrow label
 - `AuthLayout.jsx` — Centered login container
 
 **Pages (11 files):**
-- `LoginPage.jsx` — Rounded-3xl panel, navy gradient submit button, "Precision IT" brand eyebrow, surface-section inputs
+- `LoginPage.jsx` — Rounded-3xl panel, navy gradient submit button, "Fixora AI" brand eyebrow, surface-section inputs
 - `NotFoundPage.jsx` — Navy themed 404 with Manrope heading
 - `admin/DashboardPage.jsx` — Stat cards with display font numbers, hover lift, section table
 - `admin/ClientsPage.jsx` — Search card, navy table with hover rows, delete modal

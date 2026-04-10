@@ -237,4 +237,4 @@ npm run build
 
 4. **Action-oriented interfaces** — Primary actions should be prominent and confident. The UI should guide users toward the next logical action.
 
-5. **Consistent professionalism** — Maintain the navy-anchored palette, uppercase micro-labels, and structured layouts everywhere. Every screen should unmistakably belong to Precision IT.
+5. **Consistent professionalism** — Maintain the navy-anchored palette, uppercase micro-labels, and structured layouts everywhere. Every screen should unmistakably belong to Fixora AI.

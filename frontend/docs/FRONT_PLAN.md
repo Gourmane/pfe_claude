@@ -1,6 +1,6 @@
 # FRONTEND PLAN
 
-Complete implementation plan for the AI IT Assistant Platform frontend.
+Complete implementation plan for the Fixora AI frontend.
 Optimized for phased execution with Codex. Each phase is independently reviewable.
 
 ---
@@ -427,7 +427,7 @@ This prevents inconsistent error handling and forgotten loading states.
 
 **Exact deliverables:**
 1. `index.css` contains only `@import "tailwindcss";`
-2. `App.jsx` renders `<h1 className="text-2xl font-bold p-4">AI IT Assistant</h1>`
+2. `App.jsx` renders `<h1 className="text-2xl font-bold p-4">Fixora AI</h1>`
 3. `.env` has `VITE_API_URL=http://localhost:8000/api`
 4. `api/axios.js` exports configured instance with:
    - `baseURL` from env

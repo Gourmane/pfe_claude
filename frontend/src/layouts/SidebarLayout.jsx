@@ -146,7 +146,7 @@ function SidebarLayout({
           </svg>
         </div>
         <span className="font-display text-[17px] font-semibold leading-none text-white tracking-[-0.3px]">
-          Precision IT
+          Fixora AI
         </span>
       </div>
       
@@ -267,7 +267,7 @@ function SidebarLayout({
                 Espace {roleLabel}
               </div>
               <div className="truncate text-[14px] font-semibold text-text-primary">
-                Precision IT
+                Fixora AI
               </div>
             </div>
           </div>

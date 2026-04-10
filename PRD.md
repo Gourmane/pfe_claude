@@ -1,4 +1,4 @@
-**AI IT Assistant Platform**
+**Fixora AI**
 
 **PRD V3 FINAL**
 
@@ -16,11 +16,11 @@ Product Requirements Document
 
 # 1. Nom du projet
 
-AI IT Assistant Platform
+Fixora AI
 
 # 2. Contexte
 
-AI IT Assistant Platform est une application web interne de gestion du support technique informatique pour une petite structure ou un technicien IT.
+Fixora AI est une application web interne de gestion du support technique informatique pour une petite structure ou un technicien IT.
 
 ### Domaines couverts
 
@@ -588,7 +588,7 @@ Le projet est réussi si toutes les conditions suivantes sont remplies :
 
 # 23. Conclusion
 
-AI IT Assistant Platform V3 est une plateforme interne de gestion du support IT, avec un workflow simple et crédible :
+Fixora AI V3 est une plateforme interne de gestion du support IT, avec un workflow simple et crédible :
 
 •       Le client signale un problème hors système
 

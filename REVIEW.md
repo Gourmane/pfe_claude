@@ -1,4 +1,4 @@
-# REVIEW_ALL — AI IT Assistant Platform (PFE)
+# REVIEW_ALL — Fixora AI (PFE)
 
 **Reviewed by:** Senior Full-Stack Reviewer (automated audit)
 **Date:** 2026-04-07
